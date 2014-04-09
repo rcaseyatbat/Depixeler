@@ -23,13 +23,7 @@ Usage: ./simplicialFluids [xRes] [yRes] [Run]
 For example, run as follows:
 ./simplicialFluids 600 600 smw2_yoshi_01_input.png
 
-To render the regular image with no glDrawPixels or EPX, press [1]
 
-To render the image with glDrawPixels and no EPX, press [2]
-
-To render the image with no glDrawPixels but with EPX, press [3]
-
-To render the image with glDrawPixel, but with EPX, press [4]
 
 Exit the program with 'q', 'Q', or the Esc key.
 

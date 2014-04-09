@@ -22,6 +22,8 @@
 
 const double RAD_TO_DEG = 180/M_PI;
 
+using namespace std;
+
 static int lastX, lastY;
 static int downX, downY;
 
