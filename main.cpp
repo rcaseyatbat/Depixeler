@@ -328,7 +328,69 @@ void drawPNG() {
         }
         glEnd();
     }
-    
+    else if (gDrawMode == 3) {
+        //glClearColor(1.0, 1.0, 1.0, 0.0);
+        glColor3f(0.0f, 0.0f, 0.0f);
+        //GLubyte color[2][2][4];
+
+        
+        GLubyte color[gHeight][gWidth][4];
+        for(int y = 0; y < gHeight; y++) {
+            for (int x = 0; x < 3 * gWidth; x += 3) {
+                int index = x + (3 * w * y);
+
+                color[y][x/3][0] = int(gData[index]);
+                color[y][x/3][1] = int(gData[index+1]);
+                color[y][x/3][2] = int(gData[index+2]);
+                color[y][x/3][3] = 0;
+
+                //std::cout << "X: " << x/3 << " Y: " << y << "  rgb: " << int(gData[index]) << " " << int(gData[index + 1]) << " " << int(gData[index+2]) << std::endl;
+
+                //glColor3d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0);
+                //glVertex3f(-1 + (pointSize / xRes) + 2*(x/3)/max, -1 + (pointSize / yRes)+ 2*y/max, 0);
+            }
+        }
+        
+
+        /*
+        // red
+        color[0][0][0] = 255;
+        color[0][0][1] = 0;
+        color[0][0][2] = 0;
+        color[0][0][3] = 0;
+
+        // green
+        color[0][1][0] = 0;
+        color[0][1][1] = 255;
+        color[0][1][2] = 0;
+        color[0][1][3] = 0;
+
+        // blue
+        color[1][0][0] = 0;
+        color[1][0][1] = 0;
+        color[1][0][2] = 255;
+        color[1][0][3] = 0;
+
+        // white
+        color[1][1][0] = 255;
+        color[1][1][1] = 255;
+        color[1][1][2] = 255;
+        color[1][1][3] = 0;
+        */
+        
+ 
+        GLfloat scaleX = 1.0f * xRes / 2;
+        GLfloat scaleY = 1.0f * yRes / 2;
+        //std::cout << scaleX << " " << scaleY << std::endl;
+        //glPixelZoom(scaleX/15.99, scaleY/15.99);
+        glPixelZoom(xRes/(max+1), yRes/(max+1));
+
+        //glPixelZoom(5,5);
+        //glRasterPos2d(0.0, 0.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDrawPixels( gWidth, gHeight, GL_RGBA, GL_UNSIGNED_BYTE, color );
+        glFlush();
+    }
 }
 
 /* Draws the current object, based on gMaterial propereries and the current
@@ -450,6 +512,10 @@ void keyfunc(GLubyte key, GLint x, GLint y)
     } else if (key == '2') {
         std::cout << "2" << std::endl;
         gDrawMode = 2;
+        glutPostRedisplay();
+    } else if (key == '3') {
+        std::cout << "3" << std::endl;
+        gDrawMode = 3;
         glutPostRedisplay();
     }
 }
@@ -617,7 +683,7 @@ int main(int argc, char* argv[])
 
     glutMouseFunc(mouseButton);
 
-    
+    glClearColor(0.0, 0.0, 0.0, 0.0); // set background color to black
 
     // From here on, GLUT has control,
     glutMainLoop();
