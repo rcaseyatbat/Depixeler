@@ -1,0 +1,44 @@
+
+Author: Ryan Casey
+
+To compile this program, simple type "make".
+Note that this program requires OpenGL, and the Makefile is 
+set up to compile for Mac OSX.  If you are not using OSX, you
+will most likely need to update the LDFLAGS line in the makefile.
+(There is a commented out line in the makefile that should work 
+for Linux).
+
+This will create an executable called "simplicialFluids".
+
+PROGRAM: simplicialFluids
+
+PURPOSE: Implementation of the Stable, Ciruclation-Preserving, Simplicial Fluids
+algorithm described in http://www.geometry.caltech.edu/pubs/ETKSD07.pdf
+The point of the algorithm is to use Discrete Differential Geometry to exactly
+preserve circulation (and thus vorticity by Kelvin's Theorem) through each time
+step of the fluid, and thus make it more visually realisitic. 
+
+Usage: ./simplicialFluids [xRes] [yRes] [Run]
+
+For example, run as follows:
+./simplicialFluids 600 600
+
+(Note: the last argument [Run] is optional.  If Run == 1, then the animation
+will start going automatically.  If [Run] is not specified or is specified to
+any other value, the animation will not play and the program will wait for user
+input.)
+
+Note that there are many different mesh files in the directory. Currently, the 
+program uses a 40x40 grid of vertices. If you want to use a different mesh, 
+update the "prefix" stored on line 1484 of main.cpp.  You may need to make 
+other changes accordingly.
+
+USER INTERFACE:
+Press 't' to toggle the triangle mesh on and off.
+Press 'd' to toggle the dual mesh on and off. 
+Press 'b' to toggle the backtracked dual mesh (used for the next time step) on and off.
+Press 'v' to toggle the velocity field on and off (constant per triangle).
+Press 'm' to advance a single time step in the algorithm.
+
+Exit the program with 'q', 'Q', or the Esc key.
+

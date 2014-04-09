@@ -1,0 +1,28 @@
+# Makefile for cs171 HW 0
+# Just type "make" to compile; if it works right, you should have an
+# executable called hw0.
+
+CXX		= g++
+# add -g for debugging info
+CXXFLAGS	= -Wall -g
+
+LDFLAGS	= -L/usr/X11R6/lib -lglut -lGL -lGLU -lXi -lXmu
+
+SRCS	= *.cpp *.h
+OBJS	= parser.tab.o lexer.yy.o main.o matrix.o vec3.o
+PROG	= oglRenderer
+
+all:	$(OBJS)
+	$(CXX) -o $(PROG) $(OBJS) $(LDFLAGS)
+
+.cpp.o:
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
+parser.tab.cpp parser.tab.hpp: parser.ypp
+	bison -d parser.ypp
+
+lexer.yy.cpp: lexer.lex data.h
+	flex -+ -olexer.yy.cpp lexer.lex
+
+clean:
+	rm -f *.o $(PROG)
