@@ -14,7 +14,7 @@ LDFLAGS	= -L/usr/X11R6/lib -lglut -lGL -lGLU -lXi -lXmu -lpng
 
 SRCS	= *.cpp *.h
 OBJS	= main.o data.o matrix.o vec3.o readpng.o
-PROG	= simplicialFluids
+PROG	= depixeler
 
 all: $PROG
 

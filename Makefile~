@@ -6,10 +6,11 @@ CXX		= g++
 # add -g for debugging info
 CXXFLAGS	= -Wall -g -DMACOSX
 
-LDFLAGS	= -L/usr/X11R6/lib -framework GLUT -framework OpenGl -lpng
+# use this for mac:
+#LDFLAGS	= -L/usr/X11R6/lib -framework GLUT -framework OpenGl -lpng
 
 # use this for linux:
-# LDFLAGS	= -L/usr/X11R6/lib -lglut -lGL -lGLU -lXi -lXmu -lpng
+LDFLAGS	= -L/usr/X11R6/lib -lglut -lGL -lGLU -lXi -lXmu -lpng
 
 SRCS	= *.cpp *.h
 OBJS	= main.o data.o matrix.o vec3.o readpng.o
