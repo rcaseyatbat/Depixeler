@@ -11,6 +11,7 @@
 #include "readpng.h"
 #include "neighbors.h"
 #include "scale2x.h"
+#include "scale4x.h"
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
@@ -618,6 +619,9 @@ void drawPNG() {
         glDrawPixels( 2*gWidth, 2*gHeight, GL_RGBA, GL_UNSIGNED_BYTE, color );
         glFlush();
     }
+    else if (gDrawMode == 7) {
+        scale4x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
+    }
 }
 
 /* Draws the current object, based on gMaterial propereries and the current
@@ -755,6 +759,10 @@ void keyfunc(GLubyte key, GLint x, GLint y)
     } else if (key == '6') {
         std::cout << "6" << std::endl;
         gDrawMode = 6;
+        glutPostRedisplay();
+    } else if (key == '7') {
+        std::cout << "7" << std::endl;
+        gDrawMode = 7;
         glutPostRedisplay();
     }
 }
