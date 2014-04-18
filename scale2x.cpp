@@ -9,6 +9,7 @@
 #include "data.h"
 #include "matrix.h"
 #include "readpng.h"
+#include "neighbors.h"
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
