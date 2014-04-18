@@ -13,7 +13,7 @@ CXXFLAGS	= -Wall -g -DMACOSX
 LDFLAGS	= -L/usr/X11R6/lib -lglut -lGL -lGLU -lXi -lXmu -lpng
 
 SRCS	= *.cpp *.h
-OBJS	= main.o data.o matrix.o vec3.o readpng.o
+OBJS	= main.o neighbors.o data.o matrix.o vec3.o readpng.o
 PROG	= depixeler
 
 all: $PROG
@@ -26,6 +26,9 @@ clean:
 
 main.o: main.cpp data.h
 	$(CXX) $(CXXFLAGS) -c main.cpp
+
+neighbors.o: neighbors.cpp neighbors.h
+	$(CXX) $(CXXFLAGS) -c neighbors.cpp
 
 matrix.o: matrix.cpp matrix.h
 	$(CXX) $(CXXFLAGS) -c matrix.cpp

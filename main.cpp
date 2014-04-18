@@ -9,6 +9,7 @@
 #include "data.h"
 #include "matrix.h"
 #include "readpng.h"
+#include "neighbors.h"
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
@@ -106,115 +107,6 @@ double distance(double x1, double y1, double x2, double y2) {
     double ySq = (y2 - y1) * (y2 - y1);
     double d = sqrt(xSq + ySq);
     return d;
-}
-
-int getUpNeighbor(int x, int y, int imageWidth, int imageHeight) {
-    // assume gData stores RGB of each pixel
-
-    if (y == imageHeight - 1) {
-        return -1;
-    }
-
-    int newY = y + 1;
-    int index = 3 * x + (3 * imageWidth * newY);
-
-    return index;
-}
-
-int getDownNeighbor(int x, int y, int imageWidth, int imageHeight) {
-    // assume gData stores RGB of each pixel
-
-    if (y == 0) {
-        return -1;
-    }
-
-    int newY = y - 1;
-    int index = 3 * x + (3 * imageWidth * newY);
-
-    return index;
-}
-
-int getLeftNeighbor(int x, int y, int imageWidth, int imageHeight) {
-    // assume gData stores RGB of each pixel
-
-    if (x == 0) {
-        return -1;
-    }
-
-    int newX = x - 1;
-    int index = 3 * newX + (3 * imageWidth * y);
-
-    return index;
-}
-
-int getRightNeighbor(int x, int y, int imageWidth, int imageHeight) {
-    // assume gData stores RGB of each pixel
-
-    if (x == imageWidth - 1) {
-        return -1;
-    }
-
-    int newX = x + 1;
-    int index = 3 * newX + (3 * imageWidth * y);
-
-    return index;
-}
-
-
-int getUpLeftNeighbor(int x, int y, int imageWidth, int imageHeight) {
-    // assume gData stores RGB of each pixel
-
-    if (x == 0 || y == imageHeight - 1) {
-        return -1;
-    }
-
-    int newX = x - 1;
-    int newY = y + 1;
-    int index = 3 * newX + (3 * imageWidth * newY);
-
-    return index;
-}
-
-int getUpRightNeighbor(int x, int y, int imageWidth, int imageHeight) {
-    // assume gData stores RGB of each pixel
-
-    if (x == imageWidth - 1 || y == imageHeight - 1) {
-        return -1;
-    }
-
-    int newX = x + 1;
-    int newY = y + 1;
-    int index = 3 * newX + (3 * imageWidth * newY);
-
-    return index;
-}
-
-int getDownLeftNeighbor(int x, int y, int imageWidth, int imageHeight) {
-    // assume gData stores RGB of each pixel
-
-    if (x == 0 || y == 0) {
-        return -1;
-    }
-
-    int newX = x - 1;
-    int newY = y - 1;
-    int index = 3 * newX + (3 * imageWidth * newY);
-
-    return index;
-}
-
-int getDownRightNeighbor(int x, int y, int imageWidth, int imageHeight) {
-    // assume gData stores RGB of each pixel
-
-    if (x == imageWidth - 1 || y == 0) {
-        return -1;
-    }
-
-    int newX = x + 1;
-    int newY = y - 1;
-    int index = 3 * newX + (3 * imageWidth * newY);
-
-    return index;
 }
 
 void drawPNG() {
@@ -567,7 +459,6 @@ void drawPNG() {
 
     /* scale2x algorithm with gldrawPixels*/
     else if (gDrawMode == 5) {
-
         GLubyte color[2*gHeight][2*gWidth][4];
 
         glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -722,6 +613,7 @@ void drawPNG() {
         glClear(GL_COLOR_BUFFER_BIT);
         glDrawPixels( 2*gWidth, 2*gHeight, GL_RGBA, GL_UNSIGNED_BYTE, color );
         glFlush();
+
     }
     /* scale3x algorithm with gldrawPixels*/
     else if (gDrawMode == 6) {
@@ -745,7 +637,6 @@ void drawPNG() {
                     }
                 }
 
-
                 /*
                 A|B|C
                 -----
@@ -759,6 +650,7 @@ void drawPNG() {
                 --------
                 E6|E7|E8
                 */
+
                 int upIndex = getUpNeighbor(x/3,y, gWidth, gHeight);
                 int downIndex = getDownNeighbor(x/3,y, gWidth, gHeight);
                 int leftIndex = getLeftNeighbor(x/3,y, gWidth, gHeight);
@@ -846,7 +738,6 @@ void drawPNG() {
                         color[2*y + 1][2*x/3 + 1][2] = int(right.z);
                         color[2*y + 1][2*x/3 + 1][3] = 0;
                     }
-                    else if(
                 }
 
                 else {
