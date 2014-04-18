@@ -745,6 +745,20 @@ void drawPNG() {
                     }
                 }
 
+
+                /*
+                A|B|C
+                -----
+                D|E|F
+                -----
+                G|H|J
+
+                E0|E1|E2
+                --------
+                E3|E4|E5
+                --------
+                E6|E7|E8
+                */
                 int upIndex = getUpNeighbor(x/3,y, gWidth, gHeight);
                 int downIndex = getDownNeighbor(x/3,y, gWidth, gHeight);
                 int leftIndex = getLeftNeighbor(x/3,y, gWidth, gHeight);
@@ -832,6 +846,7 @@ void drawPNG() {
                         color[2*y + 1][2*x/3 + 1][2] = int(right.z);
                         color[2*y + 1][2*x/3 + 1][3] = 0;
                     }
+                    else if(
                 }
 
                 else {
