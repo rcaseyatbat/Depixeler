@@ -6,11 +6,21 @@ CXX		= g++
 # add -g for debugging info
 CXXFLAGS	= -Wall -g -DMACOSX
 
+ifeq "$(PLATFORM)" ""
+PLATFORM:= $(shell uname)
+endif
+
+ifeq "$(PLATFORM)" "Darwin"
 # use this for mac:
-#LDFLAGS	= -L/usr/X11R6/lib -framework GLUT -framework OpenGl -lpng
+LDFLAGS	= -L/usr/X11R6/lib -framework GLUT -framework OpenGl -lpng
+endif
+
+ifeq "$(PLATFORM)" "Linux"
+LDFLAGS	= -L/usr/X11R6/lib -lglut -lGL -lGLU -lXi -lXmu -lpng
+endif
 
 # use this for linux:
-LDFLAGS	= -L/usr/X11R6/lib -lglut -lGL -lGLU -lXi -lXmu -lpng
+#LDFLAGS	= -L/usr/X11R6/lib -lglut -lGL -lGLU -lXi -lXmu -lpng
 
 SRCS	= *.cpp *.h
 OBJS	= main.o neighbors.o scale2x.o data.o matrix.o vec3.o readpng.o
