@@ -58,64 +58,93 @@ void scale2x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
             int leftIndex = getLeftNeighbor(x/3,y, gWidth, gHeight);
             int rightIndex = getRightNeighbor(x/3,y, gWidth, gHeight);
 
-    
-            Vec3 up;
-            Vec3 down;
-            Vec3 right;
-            Vec3 left;
-            up.x = gData[upIndex];
-            up.y = gData[upIndex+1];
-            up.z = gData[upIndex+2];
-            down.x = gData[downIndex];
-            down.y = gData[downIndex+1];
-            down.z = gData[downIndex+2];
-            right.x = gData[rightIndex];
-            right.y = gData[rightIndex+1];
-            right.z = gData[rightIndex+2];
-            left.x = gData[leftIndex];
-            left.y = gData[leftIndex+1];
-            left.z = gData[leftIndex+2];
+            // this is for the corner cases
+            if ((upIndex == -1 && leftIndex == -1) ||
+                (upIndex == -1 && rightIndex == -1) ||
+                (downIndex == -1 && leftIndex == -1) ||
+                (downIndex == -1 && rightIndex == -1))
+            {
+                color[2*y][2*x/3][0] = int(gData[index]);
+                color[2*y][2*x/3][1] = int(gData[index + 1]);
+                color[2*y][2*x/3][2] = int(gData[index + 2]);
+                color[2*y][2*x/3][3] = 0;
 
-            bool upLeft = (up == left);
-            bool upRight = (up == right);
+                color[2*y][2*x/3 + 1][0] = int(gData[index]);
+                color[2*y][2*x/3 + 1][1] = int(gData[index + 1]);
+                color[2*y][2*x/3 + 1][2] = int(gData[index + 2]);
+                color[2*y][2*x/3 + 1][3] = 0;
 
-            bool downLeft = (down == left);
-            bool downRight = (down == right);
+                color[2*y + 1][2*x/3][0] = int(gData[index]);
+                color[2*y + 1][2*x/3][1] = int(gData[index + 1]);
+                color[2*y + 1][2*x/3][2] = int(gData[index + 2]);
+                color[2*y + 1][2*x/3][3] = 0;
 
-            bool updown = (up == down);
-            bool leftright = (left == right);
+                color[2*y + 1][2*x/3 + 1][0] = int(gData[index]);
+                color[2*y + 1][2*x/3 + 1][1] = int(gData[index + 1]);
+                color[2*y + 1][2*x/3 + 1][2] = int(gData[index + 2]);
+                color[2*y + 1][2*x/3 + 1][3] = 0;
+            }
 
-            if (!(updown) && !(leftright)) {
-                if (downLeft) {
-                    color[2*y][2*x/3][0] = int(left.x);
-                    color[2*y][2*x/3][1] = int(left.y);
+            else
+            {    
+                Vec3 up;
+                Vec3 down;
+                Vec3 right;
+                Vec3 left;
+                up.x = gData[upIndex];
+                up.y = gData[upIndex+1];
+                up.z = gData[upIndex+2];
+                down.x = gData[downIndex];
+                down.y = gData[downIndex+1];
+                down.z = gData[downIndex+2];
+                right.x = gData[rightIndex];
+                right.y = gData[rightIndex+1];
+                right.z = gData[rightIndex+2];
+                left.x = gData[leftIndex];
+                left.y = gData[leftIndex+1];
+                left.z = gData[leftIndex+2];
 
-                    color[2*y][2*x/3][2] = int(left.z);
-                    color[2*y][2*x/3][3] = 0;
-                } 
+                bool upLeft = (up == left);
+                bool upRight = (up == right);
 
-                else if (downRight) {
-                    color[2*y][2*x/3 + 1][0] = int(right.x);
-                    color[2*y][2*x/3 + 1][1] = int(right.y);
+                bool downLeft = (down == left);
+                bool downRight = (down == right);
 
-                    color[2*y][2*x/3 + 1][2] = int(right.z);
-                    color[2*y][2*x/3 + 1][3] = 0;
-                } 
+                bool updown = (up == down);
+                bool leftright = (left == right);
 
-                else if (upLeft) {
-                    color[2*y + 1][2*x/3][0] = int(left.x);
-                    color[2*y + 1][2*x/3][1] = int(left.y);
+                if (!(updown) && !(leftright)) {
+                    if (downLeft) {
+                        color[2*y][2*x/3][0] = int(left.x);
+                        color[2*y][2*x/3][1] = int(left.y);
 
-                    color[2*y + 1][2*x/3][2] = int(left.z);
-                    color[2*y + 1][2*x/3][3] = 0;
-                }
+                        color[2*y][2*x/3][2] = int(left.z);
+                        color[2*y][2*x/3][3] = 0;
+                    } 
 
-                else if (upRight) {
-                    color[2*y + 1][2*x/3 + 1][0] = int(right.x);
-                    color[2*y + 1][2*x/3 + 1][1] = int(right.y);
+                    else if (downRight) {
+                        color[2*y][2*x/3 + 1][0] = int(right.x);
+                        color[2*y][2*x/3 + 1][1] = int(right.y);
 
-                    color[2*y + 1][2*x/3 + 1][2] = int(right.z);
-                    color[2*y + 1][2*x/3 + 1][3] = 0;
+                        color[2*y][2*x/3 + 1][2] = int(right.z);
+                        color[2*y][2*x/3 + 1][3] = 0;
+                    } 
+
+                    else if (upLeft) {
+                        color[2*y + 1][2*x/3][0] = int(left.x);
+                        color[2*y + 1][2*x/3][1] = int(left.y);
+
+                        color[2*y + 1][2*x/3][2] = int(left.z);
+                        color[2*y + 1][2*x/3][3] = 0;
+                    }
+
+                    else if (upRight) {
+                        color[2*y + 1][2*x/3 + 1][0] = int(right.x);
+                        color[2*y + 1][2*x/3 + 1][1] = int(right.y);
+
+                        color[2*y + 1][2*x/3 + 1][2] = int(right.z);
+                        color[2*y + 1][2*x/3 + 1][3] = 0;
+                    }
                 }
             }
         }
