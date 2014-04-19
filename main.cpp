@@ -11,6 +11,7 @@
 #include "readpng.h"
 #include "neighbors.h"
 #include "scale2x.h"
+#include "scale3x.h"
 #include "scale4x.h"
 
 #ifdef __APPLE__
@@ -466,159 +467,10 @@ void drawPNG() {
     }
     /* scale3x algorithm with gldrawPixels*/
     else if (gDrawMode == 6) {
-
-        GLubyte color[3*gHeight][3*gWidth][4];
-
-        glClearColor(0.0, 0.0, 0.0, 0.0);
-        //glVertex3f(0.95,-0.95,0);
-
-        //GLubyte color[gHeight][gWidth][4];
-        for(int y = 0; y < gHeight; y++) {
-            for (int x = 0; x < 3 * gWidth; x += 3) {
-                int index = x + (3 * w * y);
-
-                for (int xPixel = 0; xPixel < 3; xPixel++) {
-                    for (int yPixel = 0; yPixel < 3; yPixel++) {
-                        color[3*y][3*x/3][0] = int(gData[index]);
-                        color[3*y][3*x/3][1] = int(gData[index + 1]);
-                        color[3*y][3*x/3][2] = int(gData[index + 2]);
-                        color[3*y][3*x/3][3] = 0;
-                    }
-                }
-
-                /*
-                A|B|C
-                -----
-                D|E|F
-                -----
-                G|H|J
-
-                E0|E1|E2
-                --------
-                E3|E4|E5
-                --------
-                E6|E7|E8
-                */
-
-                int upIndex = getUpNeighbor(x/3,y, gWidth, gHeight);
-                int downIndex = getDownNeighbor(x/3,y, gWidth, gHeight);
-                int leftIndex = getLeftNeighbor(x/3,y, gWidth, gHeight);
-                int rightIndex = getRightNeighbor(x/3,y, gWidth, gHeight);
-            
-                int upleftIndex = getUpLeftNeighbor(x/3, y, gWidth, gHeight);
-                int uprightIndex = getUpRightNeighbor(x/3, y, gWidth, gHeight);
-                int downleftIndex = getDownLeftNeighbor(x/3, y, gWidth, gHeight);
-                int downrightIndex = getDownRightNeighbor(x/3, y, gWidth, gHeight);
-
-                Vec3 up;
-                Vec3 down;
-                Vec3 right;
-                Vec3 left;
-
-                Vec3 upleft;
-                Vec3 upright;
-                Vec3 downleft;
-                Vec3 downright;
-
-                up.x = gData[upIndex];
-                up.y = gData[upIndex+1];
-                up.z = gData[upIndex+2];
-                down.x = gData[downIndex];
-                down.y = gData[downIndex+1];
-                down.z = gData[downIndex+2];
-                right.x = gData[rightIndex];
-                right.y = gData[rightIndex+1];
-                right.z = gData[rightIndex+2];
-                left.x = gData[leftIndex];
-                left.y = gData[leftIndex+1];
-                left.z = gData[leftIndex+2];
-
-                upleft.x = gData[upleftIndex];
-                upleft.y = gData[upleftIndex + 1];
-                upleft.z = gData[upleftIndex + 2];
-                upright.x = gData[uprightIndex];
-                upright.y = gData[uprightIndex + 1];
-                upright.z = gData[uprightIndex + 2];
-                downleft.x = gData[downleftIndex];
-                downleft.y = gData[downleftIndex + 1];
-                downleft.z = gData[downleftIndex + 2];
-                downright.x = gData[downrightIndex];
-                downright.y = gData[downrightIndex + 1];
-                downright.z = gData[downrightIndex + 2];
-
-                bool upLeft = (up == left);
-                bool upRight = (up == right);
-
-                bool downLeft = (down == left);
-                bool downRight = (down == right);
-
-                bool updown = (up == down);
-                bool leftright = (left == right);
-
-                if (!(updown) && !(leftright)) {
-                    if (downLeft) {
-                        color[2*y][2*x/3][0] = int(left.x);
-                        color[2*y][2*x/3][1] = int(left.y);
-
-                        color[2*y][2*x/3][2] = int(left.z);
-                        color[2*y][2*x/3][3] = 0;
-                    } 
-
-                    else if (downRight) {
-                        color[2*y][2*x/3 + 1][0] = int(right.x);
-                        color[2*y][2*x/3 + 1][1] = int(right.y);
-
-                        color[2*y][2*x/3 + 1][2] = int(right.z);
-                        color[2*y][2*x/3 + 1][3] = 0;
-                    } 
-
-                    else if (upLeft) {
-                        color[2*y + 1][2*x/3][0] = int(left.x);
-                        color[2*y + 1][2*x/3][1] = int(left.y);
-
-                        color[2*y + 1][2*x/3][2] = int(left.z);
-                        color[2*y + 1][2*x/3][3] = 0;
-                    }
-
-                    else if (upRight) {
-                        color[2*y + 1][2*x/3 + 1][0] = int(right.x);
-                        color[2*y + 1][2*x/3 + 1][1] = int(right.y);
-
-                        color[2*y + 1][2*x/3 + 1][2] = int(right.z);
-                        color[2*y + 1][2*x/3 + 1][3] = 0;
-                    }
-                }
-
-                else {
-                    color[2*y][2*x/3][0] = int(gData[index]);
-                    color[2*y][2*x/3][1] = int(gData[index + 1]);
-                    color[2*y][2*x/3][2] = int(gData[index + 2]);
-                    color[2*y][2*x/3][3] = 0;
-
-                    color[2*y][2*x/3 + 1][0] = int(gData[index]);
-                    color[2*y][2*x/3 + 1][1] = int(gData[index + 1]);
-                    color[2*y][2*x/3 + 1][2] = int(gData[index + 2]);
-                    color[2*y][2*x/3 + 1][3] = 0;
-
-                    color[2*y + 1][2*x/3][0] = int(gData[index]);
-                    color[2*y + 1][2*x/3][1] = int(gData[index + 1]);
-                    color[2*y + 1][2*x/3][2] = int(gData[index + 2]);
-                    color[2*y + 1][2*x/3][3] = 0;
-
-                    color[2*y + 1][2*x/3 + 1][0] = int(gData[index]);
-                    color[2*y + 1][2*x/3 + 1][1] = int(gData[index + 1]);
-                    color[2*y + 1][2*x/3 + 1][2] = int(gData[index + 2]);
-                    color[2*y + 1][2*x/3 + 1][3] = 0;
-                }
-            }
-        }
-        glPixelZoom(floor(xRes/max)/3, floor(yRes/max)/3);
-
-        glRasterPos2d(-1.0, -1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glDrawPixels( 2*gWidth, 2*gHeight, GL_RGBA, GL_UNSIGNED_BYTE, color );
-        glFlush();
+        scale3x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
     }
+
+    /* scale4x algorithm with gldrawPixels*/
     else if (gDrawMode == 7) {
         scale4x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
     }

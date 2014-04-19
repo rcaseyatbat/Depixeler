@@ -1,0 +1,8 @@
+int getUpNeighbor(int x, int y, int imageWidth, int imageHeight);
+int getDownNeighbor(int x, int y, int imageWidth, int imageHeight);
+int getLeftNeighbor(int x, int y, int imageWidth, int imageHeight);
+int getRightNeighbor(int x, int y, int imageWidth, int imageHeight);
+int getUpLeftNeighbor(int x, int y, int imageWidth, int imageHeight);
+int getUpRightNeighbor(int x, int y, int imageWidth, int imageHeight);
+int getDownLeftNeighbor(int x, int y, int imageWidth, int imageHeight);
+
