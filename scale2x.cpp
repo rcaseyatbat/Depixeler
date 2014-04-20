@@ -1,10 +1,5 @@
 #include <iostream>
-#include <cassert>
 #include <vector>
-#include <iomanip>
-#include <string>
-#include <sstream>
-#include <fstream>
 #include <cmath>
 #include "data.h"
 #include "matrix.h"
@@ -26,32 +21,20 @@ void scale2x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
     GLubyte color[2*gHeight][2*gWidth][4];
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
-    //glVertex3f(0.95,-0.95,0);
 
     //GLubyte color[gHeight][gWidth][4];
     for(int y = 0; y < gHeight; y++) {
         for (int x = 0; x < 3 * gWidth; x += 3) {
             int index = x + (3 * w * y);
 
-            color[2*y][2*x/3][0] = int(gData[index]);
-            color[2*y][2*x/3][1] = int(gData[index + 1]);
-            color[2*y][2*x/3][2] = int(gData[index + 2]);
-            color[2*y][2*x/3][3] = 0;
-
-            color[2*y][2*x/3 + 1][0] = int(gData[index]);
-            color[2*y][2*x/3 + 1][1] = int(gData[index + 1]);
-            color[2*y][2*x/3 + 1][2] = int(gData[index + 2]);
-            color[2*y][2*x/3 + 1][3] = 0;
-
-            color[2*y + 1][2*x/3][0] = int(gData[index]);
-            color[2*y + 1][2*x/3][1] = int(gData[index + 1]);
-            color[2*y + 1][2*x/3][2] = int(gData[index + 2]);
-            color[2*y + 1][2*x/3][3] = 0;
-
-            color[2*y + 1][2*x/3 + 1][0] = int(gData[index]);
-            color[2*y + 1][2*x/3 + 1][1] = int(gData[index + 1]);
-            color[2*y + 1][2*x/3 + 1][2] = int(gData[index + 2]);
-            color[2*y + 1][2*x/3 + 1][3] = 0;
+            for (int xPixel = 0; xPixel < 2; xPixel++) {
+                for (int yPixel = 0; yPixel < 2; yPixel++) {
+                    color[2*y + yPixel][2*x/3 + xPixel][0] = int(gData[index]);
+                    color[2*y + yPixel][2*x/3 + xPixel][1] = int(gData[index + 1]);
+                    color[2*y + yPixel][2*x/3 + xPixel][2] = int(gData[index + 2]);
+                    color[2*y + yPixel][2*x/3 + xPixel][3] = 0;
+                }
+            }
 
             int upIndex = getUpNeighbor(x/3,y, gWidth, gHeight);
             int downIndex = getDownNeighbor(x/3,y, gWidth, gHeight);
@@ -64,33 +47,19 @@ void scale2x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
                 (downIndex == -1 && leftIndex == -1) ||
                 (downIndex == -1 && rightIndex == -1))
             {
-                color[2*y][2*x/3][0] = int(gData[index]);
-                color[2*y][2*x/3][1] = int(gData[index + 1]);
-                color[2*y][2*x/3][2] = int(gData[index + 2]);
-                color[2*y][2*x/3][3] = 0;
-
-                color[2*y][2*x/3 + 1][0] = int(gData[index]);
-                color[2*y][2*x/3 + 1][1] = int(gData[index + 1]);
-                color[2*y][2*x/3 + 1][2] = int(gData[index + 2]);
-                color[2*y][2*x/3 + 1][3] = 0;
-
-                color[2*y + 1][2*x/3][0] = int(gData[index]);
-                color[2*y + 1][2*x/3][1] = int(gData[index + 1]);
-                color[2*y + 1][2*x/3][2] = int(gData[index + 2]);
-                color[2*y + 1][2*x/3][3] = 0;
-
-                color[2*y + 1][2*x/3 + 1][0] = int(gData[index]);
-                color[2*y + 1][2*x/3 + 1][1] = int(gData[index + 1]);
-                color[2*y + 1][2*x/3 + 1][2] = int(gData[index + 2]);
-                color[2*y + 1][2*x/3 + 1][3] = 0;
+                for (int xPixel = 0; xPixel < 2; xPixel++) {
+                    for (int yPixel = 0; yPixel < 2; yPixel++) {
+                        color[2*y + yPixel][2*x/3 + xPixel][0] = int(gData[index]);
+                        color[2*y + yPixel][2*x/3 + xPixel][1] = int(gData[index + 1]);
+                        color[2*y + yPixel][2*x/3 + xPixel][2] = int(gData[index + 2]);
+                        color[2*y + yPixel][2*x/3 + xPixel][3] = 0;
+                    }
+                }
             }
 
             else
             {    
-                Vec3 up;
-                Vec3 down;
-                Vec3 right;
-                Vec3 left;
+                Vec3 up, down, right, left;
 
                 up.x = gData[upIndex];
                 up.y = gData[upIndex+1];
@@ -118,7 +87,6 @@ void scale2x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
                     if (downLeft) {
                         color[2*y][2*x/3][0] = int(left.x);
                         color[2*y][2*x/3][1] = int(left.y);
-
                         color[2*y][2*x/3][2] = int(left.z);
                         color[2*y][2*x/3][3] = 0;
                     } 
@@ -126,7 +94,6 @@ void scale2x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
                     if (downRight) {
                         color[2*y][2*x/3 + 1][0] = int(right.x);
                         color[2*y][2*x/3 + 1][1] = int(right.y);
-
                         color[2*y][2*x/3 + 1][2] = int(right.z);
                         color[2*y][2*x/3 + 1][3] = 0;
                     } 
@@ -134,7 +101,6 @@ void scale2x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
                     if (upLeft) {
                         color[2*y + 1][2*x/3][0] = int(left.x);
                         color[2*y + 1][2*x/3][1] = int(left.y);
-
                         color[2*y + 1][2*x/3][2] = int(left.z);
                         color[2*y + 1][2*x/3][3] = 0;
                     }
@@ -142,7 +108,6 @@ void scale2x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
                     if (upRight) {
                         color[2*y + 1][2*x/3 + 1][0] = int(right.x);
                         color[2*y + 1][2*x/3 + 1][1] = int(right.y);
-
                         color[2*y + 1][2*x/3 + 1][2] = int(right.z);
                         color[2*y + 1][2*x/3 + 1][3] = 0;
                     }

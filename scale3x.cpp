@@ -1,10 +1,5 @@
 #include <iostream>
-#include <cassert>
 #include <vector>
-#include <iomanip>
-#include <string>
-#include <sstream>
-#include <fstream>
 #include <cmath>
 #include "data.h"
 #include "matrix.h"
@@ -66,17 +61,7 @@ void scale3x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
             int downleftIndex = getDownLeftNeighbor(x/3, y, gWidth, gHeight);
             int downrightIndex = getDownRightNeighbor(x/3, y, gWidth, gHeight);
 
-            Vec3 B;
-            Vec3 D;
-            Vec3 F;
-            Vec3 H;
-
-            Vec3 E;
-
-            Vec3 A;
-            Vec3 C;
-            Vec3 G;
-            Vec3 J;
+            Vec3 A, B, C, D, E, F, G, H, J;
 
             B.x = gData[upIndex];
             B.y = gData[upIndex+1];
@@ -108,7 +93,23 @@ void scale3x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
             J.y = gData[downrightIndex + 1];
             J.z = gData[downrightIndex + 2];
 
-            if ((B != H) && (D != F)) {
+            // this is for the corner cases
+            if ((upIndex == -1 && leftIndex == -1) ||
+                (upIndex == -1 && rightIndex == -1) ||
+                (downIndex == -1 && leftIndex == -1) ||
+                (downIndex == -1 && rightIndex == -1))
+            {
+                for (int xPixel = 0; xPixel < 3; xPixel++) {
+                    for (int yPixel = 0; yPixel < 3; yPixel++) {
+                        color[3*y + yPixel][3*x/3 + xPixel][0] = int(gData[index]);
+                        color[3*y + yPixel][3*x/3 + xPixel][1] = int(gData[index + 1]);
+                        color[3*y + yPixel][3*x/3 + xPixel][2] = int(gData[index + 2]);
+                        color[3*y + yPixel][3*x/3 + xPixel][3] = 0;
+                    }
+                }
+            }
+
+            else if ((B != H) && (D != F)) {
 
                 //color[3*y + 1][3*x/3 + 1][0] = int(E.x);
                 //color[3*y + 1][3*x/3 + 1][1] = int(E.y);
@@ -180,19 +181,6 @@ void scale3x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
                     color[3*y + 2][3*x/3 + 2][3] = 0;
                 }
             }
-            /*
-            else {
-                for (int xPixel = 0; xPixel < 3; xPixel++) {
-                    for (int yPixel = 0; yPixel < 3; yPixel++) {
-                        color[3*y + yPixel][3*x/3 + xPixel][0] = int(gData[index]);
-                        color[3*y + yPixel][3*x/3 + xPixel][1] = int(gData[index + 1]);
-                        color[3*y + yPixel][3*x/3 + xPixel][2] = int(gData[index + 2]);
-                        color[3*y + yPixel][3*x/3 + xPixel][3] = 0;
-                    }
-            	}
-            }
-            */
-
         }
     }
     glPixelZoom(floor(xRes/max)/3, floor(yRes/max)/3);
