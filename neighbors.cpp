@@ -18,7 +18,7 @@ int getUpNeighbor(int x, int y, int imageWidth, int imageHeight) {
     }
 
     int newY = y + 1;
-    int index = 3 * x + (3 * imageWidth * newY);
+    int index = 4 * x + (4 * imageWidth * newY);
 
     return index;
 }
@@ -31,7 +31,7 @@ int getDownNeighbor(int x, int y, int imageWidth, int imageHeight) {
     }
 
     int newY = y - 1;
-    int index = 3 * x + (3 * imageWidth * newY);
+    int index = 4 * x + (4 * imageWidth * newY);
 
     return index;
 }
@@ -44,7 +44,7 @@ int getLeftNeighbor(int x, int y, int imageWidth, int imageHeight) {
     }
 
     int newX = x - 1;
-    int index = 3 * newX + (3 * imageWidth * y);
+    int index = 4 * newX + (4 * imageWidth * y);
 
     return index;
 }
@@ -57,7 +57,7 @@ int getRightNeighbor(int x, int y, int imageWidth, int imageHeight) {
     }
 
     int newX = x + 1;
-    int index = 3 * newX + (3 * imageWidth * y);
+    int index = 4 * newX + (4 * imageWidth * y);
 
     return index;
 }
@@ -72,7 +72,7 @@ int getUpLeftNeighbor(int x, int y, int imageWidth, int imageHeight) {
 
     int newX = x - 1;
     int newY = y + 1;
-    int index = 3 * newX + (3 * imageWidth * newY);
+    int index = 4 * newX + (4 * imageWidth * newY);
 
     return index;
 }
@@ -86,7 +86,7 @@ int getUpRightNeighbor(int x, int y, int imageWidth, int imageHeight) {
 
     int newX = x + 1;
     int newY = y + 1;
-    int index = 3 * newX + (3 * imageWidth * newY);
+    int index = 4 * newX + (4 * imageWidth * newY);
 
     return index;
 }
@@ -100,7 +100,7 @@ int getDownLeftNeighbor(int x, int y, int imageWidth, int imageHeight) {
 
     int newX = x - 1;
     int newY = y - 1;
-    int index = 3 * newX + (3 * imageWidth * newY);
+    int index = 4 * newX + (4 * imageWidth * newY);
 
     return index;
 }
@@ -114,7 +114,7 @@ int getDownRightNeighbor(int x, int y, int imageWidth, int imageHeight) {
 
     int newX = x + 1;
     int newY = y - 1;
-    int index = 3 * newX + (3 * imageWidth * newY);
+    int index = 4 * newX + (4 * imageWidth * newY);
 
     return index;
 }

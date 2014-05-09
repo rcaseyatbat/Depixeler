@@ -25,22 +25,22 @@ void scale4x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
 
     //GLubyte color[gHeight][gWidth][4];
     for(int y = 0; y < gHeight; y++) {
-        for (int x = 0; x < 3 * gWidth; x += 3) {
-            int index = x + (3 * w * y);
+        for (int x = 0; x < gWidth; x ++) {
+            int index = 4 * x + (4 * w * y);
 
             for (int xPixel = 0; xPixel < 2; xPixel++) {
                 for (int yPixel = 0; yPixel < 2; yPixel++) {
-                    color[2*y + yPixel][2*x/3 + xPixel][0] = int(gData[index]);
-                    color[2*y + yPixel][2*x/3 + xPixel][1] = int(gData[index + 1]);
-                    color[2*y + yPixel][2*x/3 + xPixel][2] = int(gData[index + 2]);
-                    color[2*y + yPixel][2*x/3 + xPixel][3] = 0;
+                    color[2*y + yPixel][2*x + xPixel][0] = int(gData[index]);
+                    color[2*y + yPixel][2*x + xPixel][1] = int(gData[index + 1]);
+                    color[2*y + yPixel][2*x + xPixel][2] = int(gData[index + 2]);
+                    color[2*y + yPixel][2*x + xPixel][3] = int(gData[index + 3]);;
                 }
             }
 
-            int upIndex = getUpNeighbor(x/3,y, gWidth, gHeight);
-            int downIndex = getDownNeighbor(x/3,y, gWidth, gHeight);
-            int leftIndex = getLeftNeighbor(x/3,y, gWidth, gHeight);
-            int rightIndex = getRightNeighbor(x/3,y, gWidth, gHeight);
+            int upIndex = getUpNeighbor(x,y, gWidth, gHeight);
+            int downIndex = getDownNeighbor(x,y, gWidth, gHeight);
+            int leftIndex = getLeftNeighbor(x,y, gWidth, gHeight);
+            int rightIndex = getRightNeighbor(x,y, gWidth, gHeight);
 
             // this is for the corner cases
             if ((upIndex == -1 && leftIndex == -1) ||
@@ -53,7 +53,7 @@ void scale4x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
                         color[2*y + yPixel][2*x/3 + xPixel][0] = int(gData[index]);
                         color[2*y + yPixel][2*x/3 + xPixel][1] = int(gData[index + 1]);
                         color[2*y + yPixel][2*x/3 + xPixel][2] = int(gData[index + 2]);
-                        color[2*y + yPixel][2*x/3 + xPixel][3] = 0;
+                        color[2*y + yPixel][2*x/3 + xPixel][3] = int(gData[index + 3]);
                     }
                 }
             }
@@ -86,35 +86,35 @@ void scale4x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
 
                 if (!(updown) && !(leftright)) {
                     if (downLeft) {
-                        color[2*y][2*x/3][0] = int(left.x);
-                        color[2*y][2*x/3][1] = int(left.y);
+                        color[2*y][2*x][0] = int(left.x);
+                        color[2*y][2*x][1] = int(left.y);
 
-                        color[2*y][2*x/3][2] = int(left.z);
-                        color[2*y][2*x/3][3] = 0;
+                        color[2*y][2*x][2] = int(left.z);
+                        color[2*y][2*x][3] = int(gData[leftIndex+3]);
                     } 
 
                     if (downRight) {
-                        color[2*y][2*x/3 + 1][0] = int(right.x);
-                        color[2*y][2*x/3 + 1][1] = int(right.y);
+                        color[2*y][2*x + 1][0] = int(right.x);
+                        color[2*y][2*x + 1][1] = int(right.y);
 
-                        color[2*y][2*x/3 + 1][2] = int(right.z);
-                        color[2*y][2*x/3 + 1][3] = 0;
+                        color[2*y][2*x + 1][2] = int(right.z);
+                        color[2*y][2*x + 1][3] = int(gData[rightIndex+3]);
                     } 
 
                     if (upLeft) {
-                        color[2*y + 1][2*x/3][0] = int(left.x);
-                        color[2*y + 1][2*x/3][1] = int(left.y);
+                        color[2*y + 1][2*x][0] = int(left.x);
+                        color[2*y + 1][2*x][1] = int(left.y);
 
-                        color[2*y + 1][2*x/3][2] = int(left.z);
-                        color[2*y + 1][2*x/3][3] = 0;
+                        color[2*y + 1][2*x][2] = int(left.z);
+                        color[2*y + 1][2*x][3] = int(gData[leftIndex+3]);
                     }
 
                     if (upRight) {
-                        color[2*y + 1][2*x/3 + 1][0] = int(right.x);
-                        color[2*y + 1][2*x/3 + 1][1] = int(right.y);
+                        color[2*y + 1][2*x + 1][0] = int(right.x);
+                        color[2*y + 1][2*x + 1][1] = int(right.y);
 
-                        color[2*y + 1][2*x/3 + 1][2] = int(right.z);
-                        color[2*y + 1][2*x/3 + 1][3] = 0;
+                        color[2*y + 1][2*x + 1][2] = int(right.z);
+                        color[2*y + 1][2*x + 1][3] = int(gData[rightIndex+3]);
                     }
                 }
             }
