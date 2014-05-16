@@ -1,10 +1,5 @@
 #include <iostream>
-#include <cassert>
 #include <vector>
-#include <iomanip>
-#include <string>
-#include <sstream>
-#include <fstream>
 #include <cmath>
 #include "data.h"
 #include "matrix.h"
@@ -30,15 +25,15 @@ void scale3x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
 
     //GLubyte color[gHeight][gWidth][4];
     for(int y = 0; y < gHeight; y++) {
-        for (int x = 0; x < 3 * gWidth; x += 3) {
-            int index = x + (3 * w * y);
+        for (int x = 0; x < gWidth; x ++) {
+            int index = 4 * x + (4 * w * y);
 
             for (int xPixel = 0; xPixel < 3; xPixel++) {
                 for (int yPixel = 0; yPixel < 3; yPixel++) {
-                    color[3*y + yPixel][3*x/3 + xPixel][0] = int(gData[index]);
-                    color[3*y + yPixel][3*x/3 + xPixel][1] = int(gData[index + 1]);
-                    color[3*y + yPixel][3*x/3 + xPixel][2] = int(gData[index + 2]);
-                    color[3*y + yPixel][3*x/3 + xPixel][3] = 0;
+                    color[3*y + yPixel][3*x + xPixel][0] = int(gData[index]);
+                    color[3*y + yPixel][3*x + xPixel][1] = int(gData[index + 1]);
+                    color[3*y + yPixel][3*x + xPixel][2] = int(gData[index + 2]);
+                    color[3*y + yPixel][3*x + xPixel][3] = int(gData[index + 3]);
                 }
             }
 
@@ -56,15 +51,15 @@ void scale3x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
             E6|E7|E8
             */
 
-            int upIndex = getUpNeighbor(x/3,y, gWidth, gHeight);
-            int downIndex = getDownNeighbor(x/3,y, gWidth, gHeight);
-            int leftIndex = getLeftNeighbor(x/3,y, gWidth, gHeight);
-            int rightIndex = getRightNeighbor(x/3,y, gWidth, gHeight);
+            int upIndex = getUpNeighbor(x,y, gWidth, gHeight);
+            int downIndex = getDownNeighbor(x,y, gWidth, gHeight);
+            int leftIndex = getLeftNeighbor(x,y, gWidth, gHeight);
+            int rightIndex = getRightNeighbor(x,y, gWidth, gHeight);
         
-            int upleftIndex = getUpLeftNeighbor(x/3, y, gWidth, gHeight);
-            int uprightIndex = getUpRightNeighbor(x/3, y, gWidth, gHeight);
-            int downleftIndex = getDownLeftNeighbor(x/3, y, gWidth, gHeight);
-            int downrightIndex = getDownRightNeighbor(x/3, y, gWidth, gHeight);
+            int upleftIndex = getUpLeftNeighbor(x, y, gWidth, gHeight);
+            int uprightIndex = getUpRightNeighbor(x, y, gWidth, gHeight);
+            int downleftIndex = getDownLeftNeighbor(x, y, gWidth, gHeight);
+            int downrightIndex = getDownRightNeighbor(x, y, gWidth, gHeight);
 
             Vec3 A, B, C, D, E, F, G, H, J;
 
@@ -106,10 +101,10 @@ void scale3x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
             {
                 for (int xPixel = 0; xPixel < 3; xPixel++) {
                     for (int yPixel = 0; yPixel < 3; yPixel++) {
-                        color[3*y + yPixel][3*x/3 + xPixel][0] = int(gData[index]);
-                        color[3*y + yPixel][3*x/3 + xPixel][1] = int(gData[index + 1]);
-                        color[3*y + yPixel][3*x/3 + xPixel][2] = int(gData[index + 2]);
-                        color[3*y + yPixel][3*x/3 + xPixel][3] = 0;
+                        color[3*y + yPixel][3*x + xPixel][0] = int(gData[index]);
+                        color[3*y + yPixel][3*x + xPixel][1] = int(gData[index + 1]);
+                        color[3*y + yPixel][3*x + xPixel][2] = int(gData[index + 2]);
+                        color[3*y + yPixel][3*x + xPixel][3] = int(gData[index + 2]);
                     }
                 }
             }
@@ -123,67 +118,67 @@ void scale3x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max,
                 //color[3*y + 1][3*x/3 + 1][3] = 0;
 
                 if (D == H) {
-                    color[3*y][3*x/3][0] = int(D.x);
-                    color[3*y][3*x/3][1] = int(D.y);
+                    color[3*y][3*x][0] = int(D.x);
+                    color[3*y][3*x][1] = int(D.y);
 
-                    color[3*y][3*x/3][2] = int(D.z);
-                    color[3*y][3*x/3][3] = 0;
+                    color[3*y][3*x][2] = int(D.z);
+                    color[3*y][3*x][3] = int(gData[leftIndex+3]);
                 }
 
                 if ((D == H && E != J) || (H == F && E != G)) {
-                    color[3*y][3*x/3 + 1][0] = int(H.x);
-                    color[3*y][3*x/3 + 1][1] = int(H.y);
+                    color[3*y][3*x + 1][0] = int(H.x);
+                    color[3*y][3*x + 1][1] = int(H.y);
 
-                    color[3*y][3*x/3 + 1][2] = int(H.z);
-                    color[3*y][3*x/3 + 1][3] = 0;
+                    color[3*y][3*x + 1][2] = int(H.z);
+                    color[3*y][3*x + 1][3] = int(gData[downIndex+3]);
                 }
 
                 if (H == F) {
-                    color[3*y][3*x/3 + 2][0] = int(F.x);
-                    color[3*y][3*x/3 + 2][1] = int(F.y);
+                    color[3*y][3*x + 2][0] = int(F.x);
+                    color[3*y][3*x + 2][1] = int(F.y);
 
-                    color[3*y][3*x/3 + 2][2] = int(F.z);
-                    color[3*y][3*x/3 + 2][3] = 0;
+                    color[3*y][3*x + 2][2] = int(F.z);
+                    color[3*y][3*x + 2][3] = int(gData[rightIndex+3]);
                 }
 
                 if ((D == B && E != G) || (D == H && E != A)) {
-                    color[3*y + 1][3*x/3][0] = int(D.x);
-                    color[3*y + 1][3*x/3][1] = int(D.y);
+                    color[3*y + 1][3*x][0] = int(D.x);
+                    color[3*y + 1][3*x][1] = int(D.y);
 
-                    color[3*y + 1][3*x/3][2] = int(D.z);
-                    color[3*y + 1][3*x/3][3] = 0;
+                    color[3*y + 1][3*x][2] = int(D.z);
+                    color[3*y + 1][3*x][3] = int(gData[leftIndex+3]);
                 }
 
                 if ((B == F && E != J) || (H == F && E != C)) {
-                    color[3*y + 1][3*x/3 + 2][0] = int(F.x);
-                    color[3*y + 1][3*x/3 + 2][1] = int(F.y);
+                    color[3*y + 1][3*x + 2][0] = int(F.x);
+                    color[3*y + 1][3*x + 2][1] = int(F.y);
 
-                    color[3*y + 1][3*x/3 + 2][2] = int(F.z);
-                    color[3*y + 1][3*x/3 + 2][3] = 0;
+                    color[3*y + 1][3*x + 2][2] = int(F.z);
+                    color[3*y + 1][3*x + 2][3] = int(gData[rightIndex+3]);
                 }
 
                 if (D == B) {
-                    color[3*y + 2][3*x/3][0] = int(D.x);
-                    color[3*y + 2][3*x/3][1] = int(D.y);
+                    color[3*y + 2][3*x][0] = int(D.x);
+                    color[3*y + 2][3*x][1] = int(D.y);
 
-                    color[3*y + 2][3*x/3][2] = int(D.z);
-                    color[3*y + 2][3*x/3][3] = 0;
+                    color[3*y + 2][3*x][2] = int(D.z);
+                    color[3*y + 2][3*x][3] = int(gData[leftIndex+3]);
                 } 
 
                 if ((D == B && E != C) || (B == F && E != A)) {
-                    color[3*y + 2][3*x/3 + 1][0] = int(B.x);
-                    color[3*y + 2][3*x/3 + 1][1] = int(B.y);
+                    color[3*y + 2][3*x + 1][0] = int(B.x);
+                    color[3*y + 2][3*x + 1][1] = int(B.y);
 
-                    color[3*y + 2][3*x/3 + 1][2] = int(B.z);
-                    color[3*y + 2][3*x/3 + 1][3] = 0;
+                    color[3*y + 2][3*x + 1][2] = int(B.z);
+                    color[3*y + 2][3*x + 1][3] = int(gData[upIndex+2]);
                 } 
 
                 if (B == F) {
-                    color[3*y + 2][3*x/3 + 2][0] = int(F.x);
-                    color[3*y + 2][3*x/3 + 2][1] = int(F.y);
+                    color[3*y + 2][3*x + 2][0] = int(F.x);
+                    color[3*y + 2][3*x + 2][1] = int(F.y);
 
-                    color[3*y + 2][3*x/3 + 2][2] = int(F.z);
-                    color[3*y + 2][3*x/3 + 2][3] = 0;
+                    color[3*y + 2][3*x + 2][2] = int(F.z);
+                    color[3*y + 2][3*x + 2][3] = int(gData[rightIndex+3]);
                 }
             }
         }

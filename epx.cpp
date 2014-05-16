@@ -27,7 +27,6 @@ void epx(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max, uns
     for(int y = 0; y < gHeight; y++) {
         for (int x = 0; x < gWidth; x ++) {
             int index = 4 * x + (4 * w * y);
-
             
             for (int xPixel = 0; xPixel < 2; xPixel++) {
                 for (int yPixel = 0; yPixel < 2; yPixel++) {
@@ -37,7 +36,6 @@ void epx(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max, uns
                     color[2*y + yPixel][2*x + xPixel][3] = int(gData[index + 3]);
                 }
             }
-            
 
             int upIndex = getUpNeighbor(x,y, gWidth, gHeight);
             int downIndex = getDownNeighbor(x,y, gWidth, gHeight);

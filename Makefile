@@ -23,7 +23,7 @@ endif
 #LDFLAGS	= -L/usr/X11R6/lib -lglut -lGL -lGLU -lXi -lXmu -lpng
 
 SRCS	= *.cpp *.h
-OBJS	= main.o neighbors.o epx.o scale2x.o scale3x.o scale4x.o data.o matrix.o vec3.o readpng.o
+OBJS	= main.o neighbors.o epx.o scale2x.o scale3x.o scale4x.o eagle.o data.o matrix.o vec3.o readpng.o
 PROG	= depixeler
 
 all: $PROG
@@ -52,6 +52,9 @@ scale3x.o: scale3x.cpp scale3x.h
 scale4x.o: scale4x.cpp scale4x.h
 	$(CXX) $(CXXFLAGS) -c scale4x.cpp
 
+eagle.o: eagle.cpp eagle.h
+	$(CXX) $(CXXFLAGS) -c eagle.cpp
+
 matrix.o: matrix.cpp matrix.h
 	$(CXX) $(CXXFLAGS) -c matrix.cpp
 
@@ -62,6 +65,6 @@ vec3.o: vec3.cpp vec3.h
 	$(CXX) $(CXXFLAGS) -c vec3.cpp
     
 .cpp.o:
-	g++ -c $(CXXFLAGS) -o $@ $<
+	g++ -c $(CXXFLAGS) -I/usr/local/include/freetype2 -o $@ $<
 
 .PHONY: all clean

@@ -1,4 +1,3 @@
-#include <pngwriter.h>
 #include <iostream>
 #include <cassert>
 #include <vector>
@@ -11,6 +10,7 @@
 #include "matrix.h"
 #include "readpng.h"
 #include "neighbors.h"
+#include "eagle.h"
 #include "epx.h"
 #include "scale2x.h"
 #include "scale3x.h"
@@ -203,10 +203,7 @@ void drawPNG() {
                 
                 else
                 {
-                    Vec3 up;
-                    Vec3 down;
-                    Vec3 right;
-                    Vec3 left;
+                    Vec3 up, down, left, right;
                     up.x = gData[upIndex];
                     up.y = gData[upIndex+1];
                     up.z = gData[upIndex+2];
@@ -299,23 +296,28 @@ void drawPNG() {
         glFlush();
     }
 
-    /* EPX algorithm with gldrawPixels*/
+    /* EPX algorithm with gldrawPixels */
     else if (gDrawMode == 4) {
         epx(gHeight, gWidth, h, w, xRes, yRes, max, gData);
     }
 
-    /* scale2x algorithm with gldrawPixels*/
+    /* scale2x algorithm with gldrawPixels */
     else if (gDrawMode == 5) {
         scale2x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
     }
-    /* scale3x algorithm with gldrawPixels*/
+    /* scale3x algorithm with gldrawPixels */
     else if (gDrawMode == 6) {
         scale3x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
     }
 
-    /* scale4x algorithm with gldrawPixels*/
+    /* scale4x algorithm with gldrawPixels */
     else if (gDrawMode == 7) {
         scale4x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
+    }
+
+    /* eagle algorithm with gldrawPixels */
+    else if (gDrawMode == 8) {
+        eagle(gHeight, gWidth, h, w, xRes, yRes, max, gData);
     }
 }
 
@@ -459,6 +461,10 @@ void keyfunc(GLubyte key, GLint x, GLint y)
         std::cout << "7" << std::endl;
         gDrawMode = 7;
         glutPostRedisplay();
+    } else if (key == '8') {
+        std::cout << "8" << std::endl;
+        gDrawMode = 8;
+        glutPostRedisplay();
     }
 }
 
@@ -545,9 +551,6 @@ void readTex(const std::string &fileName) {
         }
         */
     }
-
-
-
 }
 
 /**
@@ -670,7 +673,7 @@ int main(int argc, char* argv[])
     glutInitWindowSize(xRes, yRes);
     glutInitWindowPosition(300, 100);
 
-    glutCreateWindow("CS176 Project");
+    glutCreateWindow("CS174 Project - Depixeler");
     
     initGL();
 
