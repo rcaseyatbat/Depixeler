@@ -142,11 +142,11 @@ void drawPNG() {
         glVertex3f(0.95,-0.95,0);
 
         for(int y=0; y<h; y++) {
-            for (int x = 0; x < 3*w; x += 3) {
-                int index = x + (3 * w * y);
+            for (int x = 0; x < gWidth; x ++) {
+                int index = 4 * x + (4 * w * y);
 
-                glColor3d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0);
-                glVertex3f(-1 + (pointSize / xRes) + 2*(x/3)/max, -1 + (pointSize / yRes)+ 2*y/max, 0);
+                glColor4d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0, int(gData[index+3]) / 256.0) ;
+                glVertex3f(-1 + (pointSize / xRes) + 2*(x)/max, -1 + (pointSize / yRes)+ 2*y/max, 0);
             }
         }
         glEnd();
@@ -174,15 +174,15 @@ void drawPNG() {
         glVertex3f(0.95,-0.95,0);
 
         for(int y=0; y<h; y++) {
-            for (int x = 0; x < 3*w; x += 3) {
-                int index = x + (3 * w * y);
+            for (int x = 0; x < gWidth; x ++) {
+                int index = 4 * x + (4 * w * y);
 
-                glColor3d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0);
+                glColor4d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0, int(gData[index+3]) / 256.0) ;
 
-                int upIndex = getUpNeighbor(x/3,y, gWidth, gHeight);
-                int downIndex = getDownNeighbor(x/3,y, gWidth, gHeight);
-                int leftIndex = getLeftNeighbor(x/3,y, gWidth, gHeight);
-                int rightIndex = getRightNeighbor(x/3,y, gWidth, gHeight);
+                int upIndex = getUpNeighbor(x,y, gWidth, gHeight);
+                int downIndex = getDownNeighbor(x,y, gWidth, gHeight);
+                int leftIndex = getLeftNeighbor(x,y, gWidth, gHeight);
+                int rightIndex = getRightNeighbor(x,y, gWidth, gHeight);
 
                 // this is for the corner cases
                 if ((upIndex == -1 && leftIndex == -1) ||
@@ -191,13 +191,13 @@ void drawPNG() {
                     (downIndex == -1 && rightIndex == -1))
                 {
                     // bottom-left pixel of the 2x2
-                    glVertex3f(-1 + (pointSize / xRes) + 2*(x/3)/max, -1 + (pointSize / yRes)+ 2*y/max, 0);
+                    glVertex3f(-1 + (pointSize / xRes) + 2*(x)/max, -1 + (pointSize / yRes)+ 2*y/max, 0);
                     // bottom-right pixel of the 2x2
-                    glVertex3f(-1 + (pointSize / xRes) + 2*(x/3)/max + 2*pointSize/xRes, -1 + (pointSize / yRes)+ 2*y/max , 0);
+                    glVertex3f(-1 + (pointSize / xRes) + 2*(x)/max + 2*pointSize/xRes, -1 + (pointSize / yRes)+ 2*y/max , 0);
                     // top-left pixel of the 2x2
-                    glVertex3f(-1 + (pointSize / xRes) + 2*(x/3)/max, -1 + (pointSize / yRes)+ 2*y/max + 2*pointSize/yRes, 0);
+                    glVertex3f(-1 + (pointSize / xRes) + 2*(x)/max, -1 + (pointSize / yRes)+ 2*y/max + 2*pointSize/yRes, 0);
                     // top-right pixel of the 2x2
-                    glVertex3f(-1 + (pointSize / xRes) + 2*(x/3)/max + 2*pointSize/xRes, -1 + (pointSize / yRes)+ 2*y/max + 2*pointSize/yRes, 0);                    
+                    glVertex3f(-1 + (pointSize / xRes) + 2*(x)/max + 2*pointSize/xRes, -1 + (pointSize / yRes)+ 2*y/max + 2*pointSize/yRes, 0);                    
                 }
                 
                 else
@@ -229,33 +229,32 @@ void drawPNG() {
                     //std::cout << downRight << std::endl;
 
                     if (downLeft) {
-                        glColor3d(down.x / 256.0, down.y / 256.0, down.z / 256.0);
+                        glColor4d(down.x / 256.0, down.y / 256.0, down.z / 256.0, int(gData[downIndex+3]) / 256.0);
                     } 
                     // bottom-left pixel of the 2x2
-                    glVertex3f(-1 + (pointSize / xRes) + 2*(x/3)/max, -1 + (pointSize / yRes)+ 2*y/max, 0);
-                    glColor3d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0);
+                    glVertex3f(-1 + (pointSize / xRes) + 2*(x)/max, -1 + (pointSize / yRes)+ 2*y/max, 0);
+                    glColor4d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0, int(gData[index+3]) / 256.0);
 
                     if (downRight) {
-                        glColor3d(down.x / 256.0, down.y / 256.0, down.z / 256.0);
+                        glColor4d(down.x / 256.0, down.y / 256.0, down.z / 256.0, int(gData[downIndex+3]) / 256.0);
                     } 
                     // bottom-right pixel of the 2x2
-                    glVertex3f(-1 + (pointSize / xRes) + 2*(x/3)/max + 2*pointSize/xRes, -1 + (pointSize / yRes)+ 2*y/max , 0);
-                    glColor3d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0);
+                    glVertex3f(-1 + (pointSize / xRes) + 2*(x)/max + 2*pointSize/xRes, -1 + (pointSize / yRes)+ 2*y/max , 0);
+                    glColor4d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0, int(gData[index+3]) / 256.0);
 
                     if (upLeft) {
-                        glColor3d(up.x / 256.0, up.y / 256.0, up.z / 256.0);
+                        glColor4d(up.x / 256.0, up.y / 256.0, up.z / 256.0, int(gData[upIndex+3]) / 256.0);
                     }
                     // top-left pixel of the 2x2
-                    glVertex3f(-1 + (pointSize / xRes) + 2*(x/3)/max, -1 + (pointSize / yRes)+ 2*y/max + 2*pointSize/yRes, 0);
-                    glColor3d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0);
+                    glVertex3f(-1 + (pointSize / xRes) + 2*(x)/max, -1 + (pointSize / yRes)+ 2*y/max + 2*pointSize/yRes, 0);
+                    glColor4d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0, int(gData[index+3]) / 256.0);
 
                     if (upRight) {
-                        glColor3d(up.x / 256.0, up.y / 256.0, up.z / 256.0);
+                        glColor4d(up.x / 256.0, up.y / 256.0, up.z / 256.0, int(gData[downIndex+3]) / 256.0);
                     }
                     // top-right pixel of the 2x2
-                    glVertex3f(-1 + (pointSize / xRes) + 2*(x/3)/max + 2*pointSize/xRes, -1 + (pointSize / yRes)+ 2*y/max + 2*pointSize/yRes, 0);
-                    glColor3d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0);
-
+                    glVertex3f(-1 + (pointSize / xRes) + 2*(x)/max + 2*pointSize/xRes, -1 + (pointSize / yRes)+ 2*y/max + 2*pointSize/yRes, 0);
+                    glColor4d(int(gData[index]) / 256.0, int(gData[index+1]) / 256.0, int(gData[index+2]) / 256.0, int(gData[index+3]) / 256.0);
                 }
             }
         }
@@ -271,13 +270,13 @@ void drawPNG() {
         
         GLubyte color[gHeight][gWidth][4];
         for(int y = 0; y < gHeight; y++) {
-            for (int x = 0; x < 3 * gWidth; x += 3) {
-                int index = x + (3 * w * y);
+            for (int x = 0; x < gWidth; x ++) {
+                int index = 4 * x + (4 * w * y);
 
-                color[y][x/3][0] = int(gData[index]);
-                color[y][x/3][1] = int(gData[index+1]);
-                color[y][x/3][2] = int(gData[index+2]);
-                color[y][x/3][3] = 0;
+                color[y][x][0] = int(gData[index]);
+                color[y][x][1] = int(gData[index+1]);
+                color[y][x][2] = int(gData[index+2]);
+                color[y][x][3] = int(gData[index+3]);
 
                 //std::cout << "X: " << x/3 << " Y: " << y << "  rgb: " << int(gData[index]) << " " << int(gData[index + 1]) << " " << int(gData[index+2]) << std::endl;
 
@@ -309,33 +308,35 @@ void drawPNG() {
 
         //GLubyte color[gHeight][gWidth][4];
         for(int y = 0; y < gHeight; y++) {
-            for (int x = 0; x < 3 * gWidth; x += 3) {
-                int index = x + (3 * w * y);
+            for (int x = 0; x < gWidth; x ++) {
+                int index = 4 * x + (4 * w * y);
 
-                color[2*y][2*x/3][0] = int(gData[index]);
-                color[2*y][2*x/3][1] = int(gData[index + 1]);
-                color[2*y][2*x/3][2] = int(gData[index + 2]);
-                color[2*y][2*x/3][3] = 0;
+                
+                color[2*y][2*x][0] = int(gData[index]);
+                color[2*y][2*x][1] = int(gData[index + 1]);
+                color[2*y][2*x][2] = int(gData[index + 2]);
+                color[2*y][2*x][3] = int(gData[index + 3]);
 
-                color[2*y][2*x/3 + 1][0] = int(gData[index]);
-                color[2*y][2*x/3 + 1][1] = int(gData[index + 1]);
-                color[2*y][2*x/3 + 1][2] = int(gData[index + 2]);
-                color[2*y][2*x/3 + 1][3] = 0;
+                color[2*y][2*x + 1][0] = int(gData[index]);
+                color[2*y][2*x + 1][1] = int(gData[index + 1]);
+                color[2*y][2*x + 1][2] = int(gData[index + 2]);
+                color[2*y][2*x + 1][3] = int(gData[index + 3]);
 
-                color[2*y + 1][2*x/3][0] = int(gData[index]);
-                color[2*y + 1][2*x/3][1] = int(gData[index + 1]);
-                color[2*y + 1][2*x/3][2] = int(gData[index + 2]);
-                color[2*y + 1][2*x/3][3] = 0;
+                color[2*y + 1][2*x][0] = int(gData[index]);
+                color[2*y + 1][2*x][1] = int(gData[index + 1]);
+                color[2*y + 1][2*x][2] = int(gData[index + 2]);
+                color[2*y + 1][2*x][3] = int(gData[index + 3]);
 
-                color[2*y + 1][2*x/3 + 1][0] = int(gData[index]);
-                color[2*y + 1][2*x/3 + 1][1] = int(gData[index + 1]);
-                color[2*y + 1][2*x/3 + 1][2] = int(gData[index + 2]);
-                color[2*y + 1][2*x/3 + 1][3] = 0;
+                color[2*y + 1][2*x + 1][0] = int(gData[index]);
+                color[2*y + 1][2*x + 1][1] = int(gData[index + 1]);
+                color[2*y + 1][2*x + 1][2] = int(gData[index + 2]);
+                color[2*y + 1][2*x + 1][3] = int(gData[index + 3]);
+                
 
-                int upIndex = getUpNeighbor(x/3,y, gWidth, gHeight);
-                int downIndex = getDownNeighbor(x/3,y, gWidth, gHeight);
-                int leftIndex = getLeftNeighbor(x/3,y, gWidth, gHeight);
-                int rightIndex = getRightNeighbor(x/3,y, gWidth, gHeight);
+                int upIndex = getUpNeighbor(x,y, gWidth, gHeight);
+                int downIndex = getDownNeighbor(x,y, gWidth, gHeight);
+                int leftIndex = getLeftNeighbor(x,y, gWidth, gHeight);
+                int rightIndex = getRightNeighbor(x,y, gWidth, gHeight);
 
                 // this is for the corner cases
                 if ((upIndex == -1 && leftIndex == -1) ||
@@ -343,25 +344,27 @@ void drawPNG() {
                     (downIndex == -1 && leftIndex == -1) ||
                     (downIndex == -1 && rightIndex == -1))
                 {
-                    color[2*y][2*x/3][0] = int(gData[index]);
-                    color[2*y][2*x/3][1] = int(gData[index + 1]);
-                    color[2*y][2*x/3][2] = int(gData[index + 2]);
-                    color[2*y][2*x/3][3] = 0;
+                    
+                    color[2*y][2*x][0] = int(gData[index]);
+                    color[2*y][2*x][1] = int(gData[index + 1]);
+                    color[2*y][2*x][2] = int(gData[index + 2]);
+                    color[2*y][2*x][3] = int(gData[index + 3]);
 
-                    color[2*y][2*x/3 + 1][0] = int(gData[index]);
-                    color[2*y][2*x/3 + 1][1] = int(gData[index + 1]);
-                    color[2*y][2*x/3 + 1][2] = int(gData[index + 2]);
-                    color[2*y][2*x/3 + 1][3] = 0;
+                    color[2*y][2*x + 1][0] = int(gData[index]);
+                    color[2*y][2*x + 1][1] = int(gData[index + 1]);
+                    color[2*y][2*x + 1][2] = int(gData[index + 2]);
+                    color[2*y][2*x + 1][3] = int(gData[index + 3]);
 
-                    color[2*y + 1][2*x/3][0] = int(gData[index]);
-                    color[2*y + 1][2*x/3][1] = int(gData[index + 1]);
-                    color[2*y + 1][2*x/3][2] = int(gData[index + 2]);
-                    color[2*y + 1][2*x/3][3] = 0;
+                    color[2*y + 1][2*x][0] = int(gData[index]);
+                    color[2*y + 1][2*x][1] = int(gData[index + 1]);
+                    color[2*y + 1][2*x][2] = int(gData[index + 2]);
+                    color[2*y + 1][2*x][3] = int(gData[index + 3]);
 
-                    color[2*y + 1][2*x/3 + 1][0] = int(gData[index]);
-                    color[2*y + 1][2*x/3 + 1][1] = int(gData[index + 1]);
-                    color[2*y + 1][2*x/3 + 1][2] = int(gData[index + 2]);
-                    color[2*y + 1][2*x/3 + 1][3] = 0;
+                    color[2*y + 1][2*x + 1][0] = int(gData[index]);
+                    color[2*y + 1][2*x + 1][1] = int(gData[index + 1]);
+                    color[2*y + 1][2*x + 1][2] = int(gData[index + 2]);
+                    color[2*y + 1][2*x + 1][3] = int(gData[index + 3]);
+                    
                 }
 
                 else
@@ -383,6 +386,7 @@ void drawPNG() {
                     left.y = gData[leftIndex+1];
                     left.z = gData[leftIndex+2];
 
+
                     bool upLeft = (up == left);
                     bool upRight = (up == right);
 
@@ -395,65 +399,63 @@ void drawPNG() {
                     bool leftrightdown = (left == down) && (right == down);
 
                     if (upleftright || upleftdown || uprightdown || leftrightdown) {
-                        color[2*y][2*x/3][0] = int(gData[index]);
-                        color[2*y][2*x/3][1] = int(gData[index + 1]);
-                        color[2*y][2*x/3][2] = int(gData[index + 2]);
-                        color[2*y][2*x/3][3] = 0;
+                        color[2*y][2*x][0] = int(gData[index]);
+                        color[2*y][2*x][1] = int(gData[index + 1]);
+                        color[2*y][2*x][2] = int(gData[index + 2]);
+                        color[2*y][2*x][3] = int(gData[index + 3]);
 
-                        color[2*y][2*x/3 + 1][0] = int(gData[index]);
-                        color[2*y][2*x/3 + 1][1] = int(gData[index + 1]);
-                        color[2*y][2*x/3 + 1][2] = int(gData[index + 2]);
-                        color[2*y][2*x/3 + 1][3] = 0;
+                        color[2*y][2*x + 1][0] = int(gData[index]);
+                        color[2*y][2*x + 1][1] = int(gData[index + 1]);
+                        color[2*y][2*x + 1][2] = int(gData[index + 2]);
+                        color[2*y][2*x + 1][3] = int(gData[index + 3]);
 
-                        color[2*y + 1][2*x/3][0] = int(gData[index]);
-                        color[2*y + 1][2*x/3][1] = int(gData[index + 1]);
-                        color[2*y + 1][2*x/3][2] = int(gData[index + 2]);
-                        color[2*y + 1][2*x/3][3] = 0;
+                        color[2*y + 1][2*x][0] = int(gData[index]);
+                        color[2*y + 1][2*x][1] = int(gData[index + 1]);
+                        color[2*y + 1][2*x][2] = int(gData[index + 2]);
+                        color[2*y + 1][2*x][3] = int(gData[index + 3]);
 
-                        color[2*y + 1][2*x/3 + 1][0] = int(gData[index]);
-                        color[2*y + 1][2*x/3 + 1][1] = int(gData[index + 1]);
-                        color[2*y + 1][2*x/3 + 1][2] = int(gData[index + 2]);
-                        color[2*y + 1][2*x/3 + 1][3] = 0;
+                        color[2*y + 1][2*x + 1][0] = int(gData[index]);
+                        color[2*y + 1][2*x + 1][1] = int(gData[index + 1]);
+                        color[2*y + 1][2*x + 1][2] = int(gData[index + 2]);
+                        color[2*y + 1][2*x + 1][3] = int(gData[index + 3]);
                     }
 
                     else if (downLeft) {
-                        color[2*y][2*x/3][0] = int(down.x);
-                        color[2*y][2*x/3][1] = int(down.y);
+                        color[2*y][2*x][0] = int(down.x);
+                        color[2*y][2*x][1] = int(down.y);
 
-                        color[2*y][2*x/3][2] = int(down.z);
-                        color[2*y][2*x/3][3] = 0;
+                        color[2*y][2*x][2] = int(down.z);
+                        color[2*y][2*x][3] = int(gData[downIndex+3]);
                     } 
 
                     else if (downRight) {
-                        color[2*y][2*x/3 + 1][0] = int(down.x);
-                        color[2*y][2*x/3 + 1][1] = int(down.y);
+                        color[2*y][2*x + 1][0] = int(down.x);
+                        color[2*y][2*x + 1][1] = int(down.y);
 
-                        color[2*y][2*x/3 + 1][2] = int(down.z);
-                        color[2*y][2*x/3 + 1][3] = 0;
+                        color[2*y][2*x + 1][2] = int(down.z);
+                        color[2*y][2*x + 1][3] = int(gData[downIndex+3]);
                     } 
 
                     else if (upLeft) {
-                        color[2*y + 1][2*x/3][0] = int(up.x);
-                        color[2*y + 1][2*x/3][1] = int(up.y);
+                        color[2*y + 1][2*x][0] = int(up.x);
+                        color[2*y + 1][2*x][1] = int(up.y);
 
-                        color[2*y + 1][2*x/3][2] = int(up.z);
-                        color[2*y + 1][2*x/3][3] = 0;
+                        color[2*y + 1][2*x][2] = int(up.z);
+                        color[2*y + 1][2*x][3] = int(gData[upIndex+3]);
                     }
 
                     else if (upRight) {
-                        color[2*y + 1][2*x/3 + 1][0] = int(up.x);
-                        color[2*y + 1][2*x/3 + 1][1] = int(up.y);
+                        color[2*y + 1][2*x + 1][0] = int(up.x);
+                        color[2*y + 1][2*x + 1][1] = int(up.y);
 
-                        color[2*y + 1][2*x/3 + 1][2] = int(up.z);
-                        color[2*y + 1][2*x/3 + 1][3] = 0;
+                        color[2*y + 1][2*x + 1][2] = int(up.z);
+                        color[2*y + 1][2*x + 1][3] = int(gData[upIndex+3]);
 
                     }
                 }
             }
         }
         glPixelZoom(floor(xRes/max)/2, floor(yRes/max)/2);
-
-        //glPixelZoom(5,5);
 
         glRasterPos2d(-1.0, -1.0);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -638,6 +640,7 @@ void readTex(const std::string &fileName) {
     int w, h;
     png_bytepp p = readpng(filePath.c_str(), &w, &h);
 
+    /*
     gData = new unsigned char [w * h * 3];
 
     for(int y=0; y<h; y++) {
@@ -647,13 +650,64 @@ void readTex(const std::string &fileName) {
             gData[index] = r[x];
             gData[index + 1] = r[x+1];
             gData[index + 2] = r[x+2];
+            //std::cout << index << " " << int(r[x]) << std::endl;
+            //std::cout << index + 1 << " " << int(r[x+1]) << std::endl;
+            //std::cout << index + 2 << " " << int(r[x+2]) << std::endl;
         }
     }
+    */
 
     std::cout << "READ" << std::endl;
 
-    gWidth = w;
-    gHeight = h;
+    //gWidth = w;
+    //gHeight = h;
+
+    GLubyte *textureImage;
+    int width, height;
+    bool hasAlpha;
+    //char filename[] = "yoshihq2x.png";
+    //char filename[] = "yoshi_side.png";
+    char *filename = new char[filePath.size()+1];
+    filename[filePath.size()]=0;
+    memcpy(filename,filePath.c_str(),filePath.size());
+
+    bool success = loadPngImage(filename, width, height, hasAlpha, &textureImage);
+    if (!success) {
+        std::cout << "Unable to load png file" << std::endl;
+        return;
+    }
+
+    gWidth = width;
+    gHeight = height;
+    gData = new unsigned char [width * height * 4];
+    std::cout << "Image loaded " << width << " " << height << " alpha " << hasAlpha << std::endl;
+    int count = 0;
+    for (int i = 0; i < width * height; i++) {
+        if (hasAlpha) {
+            gData[4*i] = textureImage[4*i];
+            gData[4*i + 1] = textureImage[4*i + 1];
+            gData[4*i + 2] = textureImage[4*i + 2];
+            gData[4*i + 3] = textureImage[4*i + 3];
+        } else {
+            gData[4*i] = textureImage[3*i]; // since textureImage now is just RGB
+            gData[4*i + 1] = textureImage[3*i + 1];
+            gData[4*i + 2] = textureImage[3*i + 2];
+            gData[4*i + 3] = 0;     
+        }
+
+        //std::cout << i << " "<< int(textureImage[i]) << std::endl;
+        /*
+        if (i % 4 == 0) {
+            continue;
+        } else {
+            gData[count] = textureImage[i];
+            count++;
+        }
+        */
+    }
+
+
+
 }
 
 /**
