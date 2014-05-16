@@ -31,5 +31,9 @@ To render the image with glDrawPixels and NO EPX, press [3]
 
 To render the image with glDrawPixel, but with EPX, press [4]
 
+To render the image with glDrawPixel, but with scale2x, press [5] (Please note that this looks EXACTLY the same as EPX except it is rendered slightly faster)
+
+To render the image with scale4x, press [7] (Note that this is scale2x applied twice)
+
 Exit the program with 'q', 'Q', or the Esc key.
 

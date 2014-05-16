@@ -10,7 +10,7 @@ for Linux).
 
 This will create an executable called "simplicialFluids".
 
-PROGRAM: simplicialFluids
+PROGRAM: depixeler
 
 PURPOSE: Implementation of the Stable, Ciruclation-Preserving, Simplicial Fluids
 algorithm described in http://www.geometry.caltech.edu/pubs/ETKSD07.pdf
@@ -18,10 +18,10 @@ The point of the algorithm is to use Discrete Differential Geometry to exactly
 preserve circulation (and thus vorticity by Kelvin's Theorem) through each time
 step of the fluid, and thus make it more visually realisitic. 
 
-Usage: ./simplicialFluids [xRes] [yRes] [Run]
+Usage: ./depixeler [xRes] [yRes] [Run]
 
 For example, run as follows:
-./simplicialFluids 600 600 smw2_yoshi_01_input.png
+./depixeler 600 600 smw2_yoshi_01_input.png
 
 To render the regular image with NO glDrawPixels and NO EPX, press [1]
 

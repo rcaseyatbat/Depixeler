@@ -1,3 +1,4 @@
+#include <pngwriter.h>
 #include <iostream>
 #include <cassert>
 #include <vector>

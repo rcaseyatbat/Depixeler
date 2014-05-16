@@ -13,6 +13,7 @@
 #include "scale2x.h"
 #include "scale3x.h"
 #include "scale4x.h"
+#include <pngwriter.h>
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
@@ -611,6 +612,10 @@ void keyfunc(GLubyte key, GLint x, GLint y)
     } else if (key == '6') {
         std::cout << "6" << std::endl;
         gDrawMode = 6;
+        glutPostRedisplay();
+    } else if (key == '7') {
+        std::cout << "7" << std::endl;
+        gDrawMode = 7;
         glutPostRedisplay();
     }
 }
