@@ -40,13 +40,16 @@ main.o: main.cpp data.h
 neighbors.o: neighbors.cpp neighbors.h
 	$(CXX) $(CXXFLAGS) -c neighbors.cpp
 
+epx.o: epx.cpp epx.h
+	$(CXX) $(CXXFLAGS) -c epx.cpp
+
 scale2x.o: scale2x.cpp scale2x.h
 	$(CXX) $(CXXFLAGS) -c scale2x.cpp
 
 scale3x.o: scale3x.cpp scale3x.h
 	$(CXX) $(CXXFLAGS) -c scale3x.cpp
 
-scale3x.o: scale4x.cpp scale4x.h
+scale4x.o: scale4x.cpp scale4x.h
 	$(CXX) $(CXXFLAGS) -c scale4x.cpp
 
 matrix.o: matrix.cpp matrix.h

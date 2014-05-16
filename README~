@@ -1,5 +1,5 @@
 
-Author: Ryan Casey
+Authors: Ryan Casey, Naoki Eto
 
 To compile this program, simple type "make".
 Note that this program requires OpenGL, and the Makefile is 
@@ -10,7 +10,7 @@ for Linux).
 
 This will create an executable called "simplicialFluids".
 
-PROGRAM: simplicialFluids
+PROGRAM: depixeler
 
 PURPOSE: Implementation of the Stable, Ciruclation-Preserving, Simplicial Fluids
 algorithm described in http://www.geometry.caltech.edu/pubs/ETKSD07.pdf
@@ -18,10 +18,10 @@ The point of the algorithm is to use Discrete Differential Geometry to exactly
 preserve circulation (and thus vorticity by Kelvin's Theorem) through each time
 step of the fluid, and thus make it more visually realisitic. 
 
-Usage: ./simplicialFluids [xRes] [yRes] [Run]
+Usage: ./depixeler [xRes] [yRes] [Run]
 
 For example, run as follows:
-./simplicialFluids 600 600 smw2_yoshi_01_input.png
+./depixeler 600 600 smw2_yoshi_01_input.png
 
 To render the regular image with NO glDrawPixels and NO EPX, press [1]
 
@@ -33,7 +33,26 @@ To render the image with glDrawPixel, but with EPX, press [4]
 
 To render the image with glDrawPixel, but with scale2x, press [5] (Please note that this looks EXACTLY the same as EPX except it is rendered slightly faster)
 
+To render the image with glDrawPizel, but with scale3x, press [6]
+
 To render the image with scale4x, press [7] (Note that this is scale2x applied twice)
 
 Exit the program with 'q', 'Q', or the Esc key.
 
+So basically
+
+key press | glDrawPixels | original | epx | scale2x | scale3x | scale4x
+-------------------------------------------------------------------------
+   [1]    |              |    X     |     |         |         |
+-------------------------------------------------------------------------
+   [2]    |              |          |  X  |         |         |        
+-------------------------------------------------------------------------
+   [3]    |      X       |    X     |     |         |         |      
+-------------------------------------------------------------------------
+   [4]    |      X       |          |  X  |         |         |        
+-------------------------------------------------------------------------
+   [5]    |      X       |          |     |    X    |         |       
+-------------------------------------------------------------------------
+   [6]    |      X       |          |     |         |    X    |          
+-------------------------------------------------------------------------
+   [7]    |      X       |          |     |         |         |    X

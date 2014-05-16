@@ -23,7 +23,7 @@ endif
 #LDFLAGS	= -L/usr/X11R6/lib -lglut -lGL -lGLU -lXi -lXmu -lpng
 
 SRCS	= *.cpp *.h
-OBJS	= main.o neighbors.o scale2x.o scale3x.o scale4x.o data.o matrix.o vec3.o readpng.o
+OBJS	= main.o neighbors.o epx.o scale2x.o scale3x.o scale4x.o data.o matrix.o vec3.o readpng.o
 PROG	= depixeler
 
 all: $PROG
@@ -39,6 +39,9 @@ main.o: main.cpp data.h
 
 neighbors.o: neighbors.cpp neighbors.h
 	$(CXX) $(CXXFLAGS) -c neighbors.cpp
+
+epx.o: epx.cpp epx.h
+	$(CXX) $(CXXFLAGS) -c epx.cpp
 
 scale2x.o: scale2x.cpp scale2x.h
 	$(CXX) $(CXXFLAGS) -c scale2x.cpp

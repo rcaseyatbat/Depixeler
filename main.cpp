@@ -11,6 +11,7 @@
 #include "matrix.h"
 #include "readpng.h"
 #include "neighbors.h"
+#include "epx.h"
 #include "scale2x.h"
 #include "scale3x.h"
 #include "scale4x.h"
@@ -127,7 +128,7 @@ void drawPNG() {
     }
 
     /*
-     * This is for pressing the key '2'. It renders the png image as it is.
+     * This is for pressing the key '1'. It renders the png image as it is.
      * It can be blown up to whatever size the user desires, and the pixels/pixel 
      * size will be scaled accordingly with no algorithm attempted to depixel the
      * png image.
@@ -300,173 +301,12 @@ void drawPNG() {
 
     /* EPX algorithm with gldrawPixels*/
     else if (gDrawMode == 4) {
-
-        GLubyte color[2*gHeight][2*gWidth][4];
-
-        glClearColor(0.0, 0.0, 0.0, 0.0);
-        //glVertex3f(0.95,-0.95,0);
-
-        //GLubyte color[gHeight][gWidth][4];
-        for(int y = 0; y < gHeight; y++) {
-            for (int x = 0; x < gWidth; x ++) {
-                int index = 4 * x + (4 * w * y);
-
-                
-                color[2*y][2*x][0] = int(gData[index]);
-                color[2*y][2*x][1] = int(gData[index + 1]);
-                color[2*y][2*x][2] = int(gData[index + 2]);
-                color[2*y][2*x][3] = int(gData[index + 3]);
-
-                color[2*y][2*x + 1][0] = int(gData[index]);
-                color[2*y][2*x + 1][1] = int(gData[index + 1]);
-                color[2*y][2*x + 1][2] = int(gData[index + 2]);
-                color[2*y][2*x + 1][3] = int(gData[index + 3]);
-
-                color[2*y + 1][2*x][0] = int(gData[index]);
-                color[2*y + 1][2*x][1] = int(gData[index + 1]);
-                color[2*y + 1][2*x][2] = int(gData[index + 2]);
-                color[2*y + 1][2*x][3] = int(gData[index + 3]);
-
-                color[2*y + 1][2*x + 1][0] = int(gData[index]);
-                color[2*y + 1][2*x + 1][1] = int(gData[index + 1]);
-                color[2*y + 1][2*x + 1][2] = int(gData[index + 2]);
-                color[2*y + 1][2*x + 1][3] = int(gData[index + 3]);
-                
-
-                int upIndex = getUpNeighbor(x,y, gWidth, gHeight);
-                int downIndex = getDownNeighbor(x,y, gWidth, gHeight);
-                int leftIndex = getLeftNeighbor(x,y, gWidth, gHeight);
-                int rightIndex = getRightNeighbor(x,y, gWidth, gHeight);
-
-                // this is for the corner cases
-                if ((upIndex == -1 && leftIndex == -1) ||
-                    (upIndex == -1 && rightIndex == -1) ||
-                    (downIndex == -1 && leftIndex == -1) ||
-                    (downIndex == -1 && rightIndex == -1))
-                {
-                    
-                    color[2*y][2*x][0] = int(gData[index]);
-                    color[2*y][2*x][1] = int(gData[index + 1]);
-                    color[2*y][2*x][2] = int(gData[index + 2]);
-                    color[2*y][2*x][3] = int(gData[index + 3]);
-
-                    color[2*y][2*x + 1][0] = int(gData[index]);
-                    color[2*y][2*x + 1][1] = int(gData[index + 1]);
-                    color[2*y][2*x + 1][2] = int(gData[index + 2]);
-                    color[2*y][2*x + 1][3] = int(gData[index + 3]);
-
-                    color[2*y + 1][2*x][0] = int(gData[index]);
-                    color[2*y + 1][2*x][1] = int(gData[index + 1]);
-                    color[2*y + 1][2*x][2] = int(gData[index + 2]);
-                    color[2*y + 1][2*x][3] = int(gData[index + 3]);
-
-                    color[2*y + 1][2*x + 1][0] = int(gData[index]);
-                    color[2*y + 1][2*x + 1][1] = int(gData[index + 1]);
-                    color[2*y + 1][2*x + 1][2] = int(gData[index + 2]);
-                    color[2*y + 1][2*x + 1][3] = int(gData[index + 3]);
-                    
-                }
-
-                else
-                {
-                    Vec3 up;
-                    Vec3 down;
-                    Vec3 right;
-                    Vec3 left;
-                    up.x = gData[upIndex];
-                    up.y = gData[upIndex+1];
-                    up.z = gData[upIndex+2];
-                    down.x = gData[downIndex];
-                    down.y = gData[downIndex+1];
-                    down.z = gData[downIndex+2];
-                    right.x = gData[rightIndex];
-                    right.y = gData[rightIndex+1];
-                    right.z = gData[rightIndex+2];
-                    left.x = gData[leftIndex];
-                    left.y = gData[leftIndex+1];
-                    left.z = gData[leftIndex+2];
-
-
-                    bool upLeft = (up == left);
-                    bool upRight = (up == right);
-
-                    bool downLeft = (down == left);
-                    bool downRight = (down == right);
-
-                    bool upleftright = (up == left) && (up == right);
-                    bool upleftdown = (up == left) && (up == down);
-                    bool uprightdown = (up == right) && (up == down);
-                    bool leftrightdown = (left == down) && (right == down);
-
-                    if (upleftright || upleftdown || uprightdown || leftrightdown) {
-                        color[2*y][2*x][0] = int(gData[index]);
-                        color[2*y][2*x][1] = int(gData[index + 1]);
-                        color[2*y][2*x][2] = int(gData[index + 2]);
-                        color[2*y][2*x][3] = int(gData[index + 3]);
-
-                        color[2*y][2*x + 1][0] = int(gData[index]);
-                        color[2*y][2*x + 1][1] = int(gData[index + 1]);
-                        color[2*y][2*x + 1][2] = int(gData[index + 2]);
-                        color[2*y][2*x + 1][3] = int(gData[index + 3]);
-
-                        color[2*y + 1][2*x][0] = int(gData[index]);
-                        color[2*y + 1][2*x][1] = int(gData[index + 1]);
-                        color[2*y + 1][2*x][2] = int(gData[index + 2]);
-                        color[2*y + 1][2*x][3] = int(gData[index + 3]);
-
-                        color[2*y + 1][2*x + 1][0] = int(gData[index]);
-                        color[2*y + 1][2*x + 1][1] = int(gData[index + 1]);
-                        color[2*y + 1][2*x + 1][2] = int(gData[index + 2]);
-                        color[2*y + 1][2*x + 1][3] = int(gData[index + 3]);
-                    }
-
-                    else if (downLeft) {
-                        color[2*y][2*x][0] = int(down.x);
-                        color[2*y][2*x][1] = int(down.y);
-
-                        color[2*y][2*x][2] = int(down.z);
-                        color[2*y][2*x][3] = int(gData[downIndex+3]);
-                    } 
-
-                    else if (downRight) {
-                        color[2*y][2*x + 1][0] = int(down.x);
-                        color[2*y][2*x + 1][1] = int(down.y);
-
-                        color[2*y][2*x + 1][2] = int(down.z);
-                        color[2*y][2*x + 1][3] = int(gData[downIndex+3]);
-                    } 
-
-                    else if (upLeft) {
-                        color[2*y + 1][2*x][0] = int(up.x);
-                        color[2*y + 1][2*x][1] = int(up.y);
-
-                        color[2*y + 1][2*x][2] = int(up.z);
-                        color[2*y + 1][2*x][3] = int(gData[upIndex+3]);
-                    }
-
-                    else if (upRight) {
-                        color[2*y + 1][2*x + 1][0] = int(up.x);
-                        color[2*y + 1][2*x + 1][1] = int(up.y);
-
-                        color[2*y + 1][2*x + 1][2] = int(up.z);
-                        color[2*y + 1][2*x + 1][3] = int(gData[upIndex+3]);
-
-                    }
-                }
-            }
-        }
-        glPixelZoom(floor(xRes/max)/2, floor(yRes/max)/2);
-
-        glRasterPos2d(-1.0, -1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glDrawPixels( 2*gWidth, 2*gHeight, GL_RGBA, GL_UNSIGNED_BYTE, color );
-        glFlush();
+        epx(gHeight, gWidth, h, w, xRes, yRes, max, gData);
     }
 
     /* scale2x algorithm with gldrawPixels*/
     else if (gDrawMode == 5) {
         scale2x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
-
     }
     /* scale3x algorithm with gldrawPixels*/
     else if (gDrawMode == 6) {

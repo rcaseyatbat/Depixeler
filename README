@@ -1,5 +1,5 @@
 
-Author: Ryan Casey
+Authors: Ryan Casey, Naoki Eto
 
 To compile this program, simple type "make".
 Note that this program requires OpenGL, and the Makefile is 
@@ -33,7 +33,28 @@ To render the image with glDrawPixel, but with EPX, press [4]
 
 To render the image with glDrawPixel, but with scale2x, press [5] (Please note that this looks EXACTLY the same as EPX except it is rendered slightly faster)
 
+To render the image with glDrawPizel, but with scale3x, press [6]
+
 To render the image with scale4x, press [7] (Note that this is scale2x applied twice)
 
 Exit the program with 'q', 'Q', or the Esc key.
+
+So basically
+
+key press | glDrawPixels | original | epx | scale2x | scale3x | scale4x
+-------------------------------------------------------------------------
+   [1]    |              |    X     |     |         |         |
+-------------------------------------------------------------------------
+   [2]    |              |          |  X  |         |         |        
+-------------------------------------------------------------------------
+   [3]    |      X       |    X     |     |         |         |      
+-------------------------------------------------------------------------
+   [4]    |      X       |          |  X  |         |         |        
+-------------------------------------------------------------------------
+   [5]    |      X       |          |     |    X    |         |       
+-------------------------------------------------------------------------
+   [6]    |      X       |          |     |         |    X    |          
+-------------------------------------------------------------------------
+   [7]    |      X       |          |     |         |         |    X
+
 
