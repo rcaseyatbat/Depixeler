@@ -15,6 +15,8 @@
 #include "scale2x.h"
 #include "scale3x.h"
 #include "scale4x.h"
+#include "bilinear2x.h"
+#include "bicubic2x.h"
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
@@ -319,6 +321,16 @@ void drawPNG() {
     else if (gDrawMode == 8) {
         eagle(gHeight, gWidth, h, w, xRes, yRes, max, gData);
     }
+
+    /* bilinear interpolation! */
+    else if (gDrawMode == 9) {
+        bilinear2x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
+    }
+
+    /* bicubic interpolatoin! */
+    else if (gDrawMode == 10) {
+        bicubic2x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
+    }
 }
 
 /* Draws the current object, based on gMaterial propereries and the current
@@ -464,6 +476,14 @@ void keyfunc(GLubyte key, GLint x, GLint y)
     } else if (key == '8') {
         std::cout << "8" << std::endl;
         gDrawMode = 8;
+        glutPostRedisplay();
+    } else if (key == '9') {
+        std::cout << "9" << std::endl;
+        gDrawMode = 9;
+        glutPostRedisplay();
+    } else if (key == '0') {
+        std::cout << "0" << std::endl;
+        gDrawMode = 10;
         glutPostRedisplay();
     }
 }

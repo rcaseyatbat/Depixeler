@@ -8,17 +8,14 @@ will most likely need to update the LDFLAGS line in the makefile.
 (There is a commented out line in the makefile that should work 
 for Linux).
 
-This will create an executable called "simplicialFluids".
+This will create an executable called "depixeler".
 
 PROGRAM: depixeler
 
-PURPOSE: Implementation of the Stable, Ciruclation-Preserving, Simplicial Fluids
-algorithm described in http://www.geometry.caltech.edu/pubs/ETKSD07.pdf
-The point of the algorithm is to use Discrete Differential Geometry to exactly
-preserve circulation (and thus vorticity by Kelvin's Theorem) through each time
-step of the fluid, and thus make it more visually realisitic. 
+PURPOSE: Implementation of several pixel upscaling techniques, able to be toggle 
+by keypress as to be able to compare techniques easily for a given image.  
 
-Usage: ./depixeler [xRes] [yRes] [Run]
+USAGE: ./depixeler [xRes] [yRes] [Run]
 
 For example, run as follows:
 ./depixeler 600 600 smw2_yoshi_01_input.png
@@ -37,24 +34,32 @@ To render the image with glDrawPizel, but with scale3x, press [6]
 
 To render the image with scale4x, press [7] (Note that this is scale2x applied twice)
 
+To render the image with the Eagle Algorithm, press [8] 
+
+To render this image with a Bilinear Interpolation Filter, press [9]
+
 Exit the program with 'q', 'Q', or the Esc key.
 
-So basically
+So basically:
 
-key press | glDrawPixels | original | epx | scale2x | scale3x | scale4x
--------------------------------------------------------------------------
-   [1]    |              |    X     |     |         |         |
--------------------------------------------------------------------------
-   [2]    |              |          |  X  |         |         |        
--------------------------------------------------------------------------
-   [3]    |      X       |    X     |     |         |         |      
--------------------------------------------------------------------------
-   [4]    |      X       |          |  X  |         |         |        
--------------------------------------------------------------------------
-   [5]    |      X       |          |     |    X    |         |       
--------------------------------------------------------------------------
-   [6]    |      X       |          |     |         |    X    |          
--------------------------------------------------------------------------
-   [7]    |      X       |          |     |         |         |    X
+key press | glDrawPixels | original | epx | scale2x | scale3x | scale4x | eagle | bilinear 
+------------------------------------------------------------------------------------------
+   [1]    |              |    X     |     |         |         |         |		|	
+------------------------------------------------------------------------------------------
+   [2]    |              |          |  X  |         |         |         |		|
+------------------------------------------------------------------------------------------
+   [3]    |      X       |    X     |     |         |         |       	|		|
+------------------------------------------------------------------------------------------
+   [4]    |      X       |          |  X  |         |         |        	|		|
+------------------------------------------------------------------------------------------
+   [5]    |      X       |          |     |    X    |         |       	|		|
+------------------------------------------------------------------------------------------
+   [6]    |      X       |          |     |         |    X    |         |		|
+------------------------------------------------------------------------------------------
+   [7]    |      X       |          |     |         |         |    X 	|		|
+------------------------------------------------------------------------------------------
+   [8]    |      X       |          |     |         |         |    		|	X	|
+------------------------------------------------------------------------------------------
+   [9]    |      X       |          |     |         |         |    		|		|	X
 
 
