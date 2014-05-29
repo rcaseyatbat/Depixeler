@@ -327,7 +327,7 @@ void drawPNG() {
         bilinear2x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
     }
 
-    /* bicubic interpolatoin! */
+    /* bicubic interpolation! */
     else if (gDrawMode == 10) {
         bicubic2x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
     }

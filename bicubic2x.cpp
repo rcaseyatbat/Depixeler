@@ -16,6 +16,51 @@
 #include <GL/glut.h>
 #endif
 
+double CubicInterpolate(double y0,double y1, double y2,double y3, double mu)
+{
+   double a0,a1,a2,a3,mu2;
+
+   mu2 = mu * mu;
+   a0 = y3 - y2 - y0 + y1;
+   a1 = y0 - y1 - a0;
+   a2 = y2 - y0;
+   a3 = y1;
+
+   return(a0 * mu * mu2 + a1 * mu2 + a2 * mu + a3);
+}
+
+Vec3 CubicInterpolateVec(Vec3 y0,Vec3 y1, Vec3 y2,Vec3 y3, double mu)
+{
+   double a0x,a1x,a2x,a3x;
+   double a0y,a1y,a2y,a3y;
+   double a0z,a1z,a2z,a3z;
+
+   double mu2 = mu * mu;
+
+   // Catmull-Rom cubic splines!
+   a0x = -0.5 * y0.x + 1.5 * y1.x - 1.5 * y2.x + 0.5 * y3.x;
+   a1x = y0.x - 2.5 * y1.x + 2 * y2.x - 0.5 * y3.x;
+   a2x = -0.5 * y0.x + 0.5 * y2.x;
+   a3x = y1.x;
+
+   a0y = -0.5 * y0.y + 1.5 * y1.y - 1.5 * y2.y + 0.5 * y3.y;
+   a1y = y0.y - 2.5 * y1.y + 2 * y2.y - 0.5 * y3.y;
+   a2y = -0.5 * y0.y + 0.5 * y2.y;
+   a3y = y1.y;
+
+   a0z = -0.5 * y0.z + 1.5 * y1.z - 1.5 * y2.z + 0.5 * y3.z;
+   a1z = y0.z - 2.5 * y1.z + 2 * y2.z - 0.5 * y3.z;
+   a2z = -0.5 * y0.z + 0.5 * y2.z;
+   a3z = y1.z;
+
+   Vec3 returnVec;
+   returnVec.x = a0x * mu * mu2 + a1x * mu2 + a2x * mu + a3x;
+   returnVec.y = a0y * mu * mu2 + a1y * mu2 + a2y * mu + a3y;
+   returnVec.z = a0z * mu * mu2 + a1z * mu2 + a2z * mu + a3z;
+
+   return returnVec;
+}
+
 void bicubic2x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int max, unsigned char gData[])
 {
     GLubyte color[2*gHeight][2*gWidth][4];
@@ -64,15 +109,10 @@ void bicubic2x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int ma
                 left.y = gData[leftIndex+1];
                 left.z = gData[leftIndex+2];
 
-                int upAlpha = int(gData[upIndex+3]);
-                int downAlpha = int(gData[downIndex+3]);
-                int leftAlpha = int(gData[leftIndex+3]);
-                int rightAlpha = int(gData[rightIndex+3]);
-
-                int currentLeftX = int(gData[index]);
-                int currentLeftY = int(gData[index+1]);
-                int currentLeftZ = int(gData[index+2]);
-                int currentLeftA = int(gData[index+3]);
+                Vec3 current;
+                current.x = int(gData[index]);
+                current.y = int(gData[index+1]);
+                current.z = int(gData[index+2]);
                 
 
                 // we expand each pixel into 4 pixels, and then for each of the new pixels, 
@@ -92,31 +132,70 @@ void bicubic2x(int gHeight, int gWidth, int h, int w, int xRes, int yRes, int ma
                 Let P = P1 = P2 = P3 = P4 (we just expanded pixel P)
                 Now, we interpolate each of the P_i according to its 4 neigbors.
 
-                P1 = (L1 + U1 + P3 + P2) / 4 = (L + U + 2*P) / 4
-                P2 = (L2 + P1 + P4 + D1) / 4 = (L + D + 2*P) / 4
-                P3 = (P1 + U2 + R1 + P4) / 4 = (R + U + 2*P) / 4
-                P4 = (P2 + P3 + R2 + D2) / 4 = (R + D + 2*P) / 4
+                We do a cubic interpolation in each direction (horiztonal and vertical) according to 
+                the 2 neighbors on either side.
+
+                Order is important as CubicInterpolateVec(y0, y1, y2, y3, m) interpolates and returns
+                the value m fraction of the way between y1 and y2.
+
+                We use Catmoll-Rom spline interpolation, and then we make sure to clamp our RGB
+                values between 0 and 255 before assigning the new colors. Note that we don't 
+                really care about alpha values here.
                 */
 
-                color[2*y][2*x][0] = int((2*currentLeftX + left.x + down.x)/4.0);
-                color[2*y][2*x][1] = int((2*currentLeftY + left.y + down.y)/4.0);
-                color[2*y][2*x][2] = int((2*currentLeftZ + left.z + down.z)/4.0);
-                color[2*y][2*x][3] = int((2*currentLeftA + leftAlpha + downAlpha)/4.0);
 
-                color[2*y][2*x + 1][0] = int((2*currentLeftX + right.x + down.x)/4.0);
-                color[2*y][2*x + 1][1] = int((2*currentLeftY + right.y + down.y)/4.0);
-                color[2*y][2*x + 1][2] = int((2*currentLeftZ + right.z + down.z)/4.0);
-                color[2*y][2*x + 1][3] = int((2*currentLeftA + rightAlpha + downAlpha)/4.0);
 
-                color[2*y + 1][2*x][0] = int((2*currentLeftX + left.x + up.x)/4.0);
-                color[2*y + 1][2*x][1] = int((2*currentLeftY + left.y + up.y)/4.0);
-                color[2*y + 1][2*x][2] = int((2*currentLeftZ + left.z + up.z)/4.0);
-                color[2*y + 1][2*x][3] = int((2*currentLeftA + leftAlpha + upAlpha)/4.0);
+                // P2
+                Vec3 P2Left = CubicInterpolateVec(left, left, current, right, 0.5);
+                Vec3 P2Up = CubicInterpolateVec(up, current, down, down, 0.5);
 
-                color[2*y + 1][2*x + 1][0] = int((2*currentLeftX + right.x + up.x)/4.0);
-                color[2*y + 1][2*x + 1][1] = int((2*currentLeftY + right.y + up.y)/4.0);
-                color[2*y + 1][2*x + 1][2] = int((2*currentLeftZ + right.z + up.z)/4.0);
-                color[2*y + 1][2*x + 1][3] = int((2*currentLeftA + rightAlpha + upAlpha)/4.0); 
+                int finalP2X = min(std::max((int)(P2Left.x + P2Up.x)/2, 0), 255);
+                int finalP2Y = min(std::max((int)(P2Left.y + P2Up.y)/2, 0), 255);
+                int finalP2Z = min(std::max((int)(P2Left.z + P2Up.z)/2, 0), 255);
+
+                color[2*y][2*x][0] = finalP2X;
+                color[2*y][2*x][1] = finalP2Y;
+                color[2*y][2*x][2] = finalP2Z;
+                color[2*y][2*x][3] = 255;
+
+                // P4
+                Vec3 P4Left = CubicInterpolateVec(left, current, right, right, 0.5);
+                Vec3 P4Up = CubicInterpolateVec(up, current, down, down, 0.5);
+
+                int finalP4X = min(std::max((int)(P4Left.x + P4Up.x)/2, 0), 255);
+                int finalP4Y = min(std::max((int)(P4Left.y + P4Up.y)/2, 0), 255);
+                int finalP4Z = min(std::max((int)(P4Left.z + P4Up.z)/2, 0), 255);
+
+                color[2*y][2*x + 1][0] = finalP4X;
+                color[2*y][2*x + 1][1] = finalP4Y;
+                color[2*y][2*x + 1][2] = finalP4Z;
+                color[2*y][2*x + 1][3] = 255;
+
+                // P1
+                Vec3 P1Left = CubicInterpolateVec(left, left, current, right, 0.5);
+                Vec3 P1Up = CubicInterpolateVec(up, up, current, down, 0.5);
+
+                int finalP1X = min(std::max((int)(P1Left.x + P1Up.x)/2, 0), 255);
+                int finalP1Y = min(std::max((int)(P1Left.y + P1Up.y)/2, 0), 255);
+                int finalP1Z = min(std::max((int)(P1Left.z + P1Up.z)/2, 0), 255);
+
+                color[2*y + 1][2*x][0] = finalP1X;
+                color[2*y + 1][2*x][1] = finalP1Y;
+                color[2*y + 1][2*x][2] = finalP1Z;
+                color[2*y + 1][2*x][3] = 255;
+
+                // P3
+                Vec3 P3Left = CubicInterpolateVec(left, current, right, right, 0.5);
+                Vec3 P3Up = CubicInterpolateVec(up, up, current, down, 0.5);
+
+                int finalP3X = min(std::max((int)(P3Left.x + P3Up.x)/2, 0), 255);
+                int finalP3Y = min(std::max((int)(P3Left.y + P3Up.y)/2, 0), 255);
+                int finalP3Z = min(std::max((int)(P3Left.z + P3Up.z)/2, 0), 255);
+                color[2*y + 1][2*x + 1][0] = finalP3X;
+                color[2*y + 1][2*x + 1][1] = finalP3Y;
+                color[2*y + 1][2*x + 1][2] = finalP3Z;
+                color[2*y + 1][2*x + 1][3] = 255;
+
             }
         }
     }
