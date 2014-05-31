@@ -17,6 +17,7 @@
 #include "scale4x.h"
 #include "bilinear2x.h"
 #include "bicubic2x.h"
+#include "eagle3x.h"
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
@@ -331,6 +332,36 @@ void drawPNG() {
     else if (gDrawMode == 10) {
         bicubic2x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
     }
+
+     /* eagle3x! */
+    else if (gDrawMode == 11) {
+        eagle3x(gHeight, gWidth, h, w, xRes, yRes, max, gData);
+    }
+
+    // no matter what draw mode, draw nearest neighbor on the right side
+    // Set matrix mode
+    glMatrixMode(GL_PROJECTION);
+    // push current projection matrix on the matrix stack
+    glPushMatrix();
+    // Set an ortho projection based on window size
+    glLoadIdentity();
+    glOrtho(0, xRes * 2, 0, yRes, 0, 1);
+    // Switch back to model-view matrix
+    glMatrixMode(GL_MODELVIEW);
+    // Store current model-view matrix on the stack
+    glPushMatrix();
+    // Clear the model-view matrix
+    glLoadIdentity();
+    // You can specify this in window coordinates now
+    glRasterPos2i(2*xRes,0);
+    glPixelZoom(floor(xRes/max), floor(yRes/max));
+    glDrawPixels(gWidth, gHeight, GL_RGBA, GL_UNSIGNED_BYTE, gData);
+    // Restore the model-view matrix
+    glPopMatrix();
+    // Switch to projection matrix and restore it
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+
 }
 
 /* Draws the current object, based on gMaterial propereries and the current
@@ -484,6 +515,10 @@ void keyfunc(GLubyte key, GLint x, GLint y)
     } else if (key == '0') {
         std::cout << "0" << std::endl;
         gDrawMode = 10;
+        glutPostRedisplay();
+    } else if (key == 'e') {
+        std::cout << "e" << std::endl;
+        gDrawMode = 11;
         glutPostRedisplay();
     }
 }
@@ -690,7 +725,7 @@ int main(int argc, char* argv[])
     // These options aren't really necessary but are here for examples.
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 
-    glutInitWindowSize(xRes, yRes);
+    glutInitWindowSize(xRes*2, yRes);
     glutInitWindowPosition(300, 100);
 
     glutCreateWindow("CS174 Project - Depixeler");
